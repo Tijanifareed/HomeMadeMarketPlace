@@ -13,6 +13,7 @@ public class ShoppingCart {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "buyer_id")
     private User buyer;
 
     @OneToMany(mappedBy = "cart")

@@ -12,9 +12,11 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;  // The product being purchased
 
     @ManyToOne
+    @JoinColumn(name = "order_id")
     private Order order;  // The order this item belongs to
 
     private int quantity;

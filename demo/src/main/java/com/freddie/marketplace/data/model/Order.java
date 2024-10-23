@@ -13,6 +13,7 @@ public class Order {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "buyer_id")
     private User buyer;  // The buyer who placed the order
 
     @OneToMany(mappedBy = "order")

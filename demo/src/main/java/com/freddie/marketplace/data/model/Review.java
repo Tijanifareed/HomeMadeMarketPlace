@@ -1,9 +1,6 @@
 package com.freddie.marketplace.data.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -13,9 +10,11 @@ public class Review {
         private Long id;
 
         @ManyToOne
+        @JoinColumn(name = "product_id")
         private Product product;  // The product being reviewed
 
         @ManyToOne
+        @JoinColumn(name = "buyer_id")
         private User buyer;  // The buyer who wrote the review
 
         private int rating;  // Rating out of 5
