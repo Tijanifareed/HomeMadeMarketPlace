@@ -26,6 +26,9 @@ public class Product {
     @ElementCollection
     private List<String> images;  // Cloudinary URLs for product images
 
-    private int stock;  // Quantity available for purchase
+    private int stock;  // Quantity available for
+
+    @OneToMany
+    private List<Review> reviews;
 }
 
