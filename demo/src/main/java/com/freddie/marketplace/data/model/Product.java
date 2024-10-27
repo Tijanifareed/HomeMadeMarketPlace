@@ -10,15 +10,12 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String description;
     private Double price;
-
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private User seller;  // The seller who listed the product
-
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;  // Product category (e.g., Crafts, Art)
