@@ -1,5 +1,6 @@
 package com.freddie.marketplace.DTOS.Responses;
 
+import com.freddie.marketplace.data.model.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,4 +10,6 @@ import lombok.Setter;
 public class LoginResponse {
     private String Message;
     private String Token;
+    private UserRole role;
+    private String userName;
 }
