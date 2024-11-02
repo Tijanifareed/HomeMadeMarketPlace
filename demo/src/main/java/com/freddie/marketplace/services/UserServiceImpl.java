@@ -1,14 +1,18 @@
 package com.freddie.marketplace.services;
 
+import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
 import com.freddie.marketplace.DTOS.Requests.LoginRequest;
+import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
 import com.freddie.marketplace.DTOS.Responses.LoginResponse;
 import com.freddie.marketplace.Exceptions.EmailOrPhoneNumberExistsException;
 import com.freddie.marketplace.Exceptions.FieldsRequiredExecption;
 import com.freddie.marketplace.Exceptions.UsernameAlreadyExistsException;
+import com.freddie.marketplace.data.model.Product;
 import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.model.UserRole;
+import com.freddie.marketplace.data.repositories.ProductRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +22,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.freddie.marketplace.utils.Mapper.createUserMapper;
+import static com.freddie.marketplace.utils.Mapper.addProductMapper;
+
 
 
 @Service
@@ -33,6 +39,8 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private JWTService jwtService;
+    @Autowired
+    private ProductRepository productRepository;
 
 
     @Override
@@ -94,6 +102,16 @@ public class UserServiceImpl implements UserService{
         }
         LoginResponse response = new LoginResponse();
         response.setMessage("failed");
+        return response;
+    }
+
+    @Override
+    public AddProductResponse addProduct(AddProductRequest request1) {
+        Product product = addProductMapper(request1);
+        productRepository.save(product);
+        AddProductResponse response = new AddProductResponse();
+        String productName = product.getProductName();
+        response.setMessage(productName+" is added to your products successfully");
         return response;
     }
 

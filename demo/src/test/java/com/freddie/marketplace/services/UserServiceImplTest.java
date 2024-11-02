@@ -2,6 +2,8 @@ package com.freddie.marketplace.services;
 
 import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
+import com.freddie.marketplace.DTOS.Requests.LoginRequest;
+import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
 import com.freddie.marketplace.Exceptions.UsernameAlreadyExistsException;
 import com.freddie.marketplace.data.model.CategoryType;
@@ -13,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.freddie.marketplace.Exceptions.EmailOrPhoneNumberExistsException;
 
-import static jdk.internal.org.jline.reader.impl.LineReaderImpl.CompletionType.List;
+import java.util.ArrayList;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -99,17 +102,21 @@ class UserServiceImplTest {
         CreateAccountRequest request = createUser2();
         CreateAccountResponse response = userService.createNewUser(request);
         AddProductRequest request1 = addNewProduct();
+        AddProductResponse response1 = userService.addProduct(request1);
+        assertThat(response1.getMessage()).isEqualTo("weed is added to your products successfully");
     }
 
     private AddProductRequest addNewProduct() {
+        ArrayList <String> images = new ArrayList<>();
         AddProductRequest request = new AddProductRequest();
         request.setProductName("weed");
         request.setDescription("A good weed to smoke ");
         request.setPrice(1000.0);
         request.setSeller_id(19L);
         request.setProductType(CategoryType.FOOD);
-//        request.setImages(List<String> images);
-
+        request.setImages(images);
+        request.setStock(6);
+        return request;
     }
 
 

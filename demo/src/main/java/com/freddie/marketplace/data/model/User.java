@@ -22,9 +22,9 @@ public class User {
     private UserRole role;
     private String profilePicture;
     private String bio;
-    @OneToMany(mappedBy = "seller")
-    private List<Product> products;
-    @OneToMany(mappedBy = "buyer")
-    private List<Order> orders;
+//    @OneToMany(mappedBy = "seller")
+//    private List<Product> products;
+//    @OneToMany(mappedBy = "buyer")
+//    private List<Order> orders;
 }
 

@@ -1,11 +1,14 @@
 package com.freddie.marketplace.data.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
-
+@Setter
+@Getter
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,10 +16,9 @@ public class Product {
     private String productName;
     private String description;
     private Double price;
-    @ManyToOne
-    @JoinColumn(name = "seller_id")
-    private User seller;  // The seller who listed the product
 
+    private long sellerId;  // The seller who listed the product
+    @Enumerated(EnumType.STRING)
     private CategoryType category;  // Product category (e.g., Crafts, Art)
 
     @ElementCollection
