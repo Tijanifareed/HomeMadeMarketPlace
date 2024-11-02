@@ -20,10 +20,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import static com.freddie.marketplace.utils.Mapper.createUserMapper;
 import static com.freddie.marketplace.utils.Mapper.addProductMapper;
-
+import static com.freddie.marketplace.utils.Validators.validateRequest;
+import static com.freddie.marketplace.utils.Validators.validateRequestForProduct;
 
 
 @Service
@@ -68,26 +68,16 @@ public class UserServiceImpl implements UserService{
         return exists;
     }
 
-    private void validateRequest(CreateAccountRequest request){
-        if(request.getUsername() == null || request.getEmail() == null || request.getPhoneNumber() == null || request.getUsername().equals("")){
-            throw new FieldsRequiredExecption("field required");
-        } else if (request.getUsername().length() < 5 || request.getEmail().equals("")|| request.getEmail().length() < 5 || request.getPhoneNumber().length() < 11 || request.getPhoneNumber().equals(" ")) {
-            throw new FieldsRequiredExecption("field required");
-        }
-    }
+
 
     public boolean userExistsByPhoneNumberOrEmail(String email, String phoneNumber){
-        boolean exists = false;
-        if(userRepository.existsByEmail(email) || userRepository.existsByPhoneNumber(phoneNumber)) exists = true;
-        else exists = false;
-
-        return exists;
+        return userRepository.existsByEmail(email) || userRepository.existsByPhoneNumber(phoneNumber);
     }
 
     @Override
     public LoginResponse verifyUserWith(LoginRequest request) {
         String userName = request.getUsername();
-        User user = findUserByUserName(userName);
+        User user = userRepository.findByUsername(userName);
         UserRole role = user.getRole();
         Authentication authentication =
                 authmanager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -107,6 +97,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public AddProductResponse addProduct(AddProductRequest request1) {
+        validateRequestForProduct(request1);
         Product product = addProductMapper(request1);
         productRepository.save(product);
         AddProductResponse response = new AddProductResponse();
@@ -115,9 +106,8 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
-    private User findUserByUserName(String userName) {
-        return userRepository.findByUsername(userName);
-    }
+
+
 
 
 }

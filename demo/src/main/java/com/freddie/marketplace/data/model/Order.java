@@ -12,12 +12,10 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "buyer_id")
-    private User buyer;  // The buyer who placed the order
 
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> items;  // List of items in the order
+    private Long buyerId;  // The buyer who placed the order
+
+    private Long orderItems;  // List of items in the order
 
     private Double totalAmount;  // Total cost of the order
 

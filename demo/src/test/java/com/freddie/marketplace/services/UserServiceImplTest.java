@@ -5,6 +5,7 @@ import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
 import com.freddie.marketplace.DTOS.Requests.LoginRequest;
 import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
+import com.freddie.marketplace.Exceptions.FieldsRequiredExecption;
 import com.freddie.marketplace.Exceptions.UsernameAlreadyExistsException;
 import com.freddie.marketplace.data.model.CategoryType;
 import com.freddie.marketplace.data.model.UserRole;
@@ -109,7 +110,7 @@ class UserServiceImplTest {
     private AddProductRequest addNewProduct() {
         ArrayList <String> images = new ArrayList<>();
         AddProductRequest request = new AddProductRequest();
-        request.setProductName("weed");
+        request.setProductName("");
         request.setDescription("A good weed to smoke ");
         request.setPrice(1000.0);
         request.setSeller_id(19L);
@@ -117,6 +118,15 @@ class UserServiceImplTest {
         request.setImages(images);
         request.setStock(6);
         return request;
+    }
+
+    @Test
+    public void testThatUserMustInputAllFieldsRequired(){
+        CreateAccountRequest request = createUser2();
+        CreateAccountResponse response = userService.createNewUser(request);
+        AddProductRequest request1 = addNewProduct();
+//        AddProductResponse response1 = userService.addProduct(request1);
+        assertThrows(FieldsRequiredExecption.class, ()-> userService.addProduct(request1));
     }
 
 
