@@ -6,7 +6,7 @@ import com.freddie.marketplace.data.model.User;
 public class Mapper {
     public static User createUserMapper(CreateAccountRequest request){
         User user = new User();
-        user.setUsername(request.getUserName());
+        user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
         user.setAdress(request.getAdress());

@@ -3,11 +3,9 @@ package com.freddie.marketplace.data.model;
 public enum CategoryType {
     JEWELRY,
     CLOTHING,
-    ART,
+    ARTANDCRAFTS,
     BEAUTY,
-    TOYS,
-    STATIONERY,
+    LEATHERGOODS,
     FOOD,
-    OUTDOOR,
-    PETS
+    HOMEDECORATIONANDFURNITURE
 }

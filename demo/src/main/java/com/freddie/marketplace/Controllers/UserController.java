@@ -30,6 +30,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody CreateAccountRequest request){
         try {
+            System.out.print(request.toString());
             CreateAccountResponse response = userService.createNewUser(request);
             return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
         }catch(RuntimeException exception){

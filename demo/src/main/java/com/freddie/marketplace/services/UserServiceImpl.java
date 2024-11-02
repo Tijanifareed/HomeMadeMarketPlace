@@ -37,12 +37,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public CreateAccountResponse createNewUser(CreateAccountRequest request) {
-        if(request.getUserName() == null || request.getEmail() == null || request.getPhoneNumber() == null){
-            throw new FieldsRequiredExecption("field required");
-        }
+        validateRequest(request);
         String email = request.getEmail();
         String phoneNumber = request.getPhoneNumber();
-        String userName = request.getUserName();
+        String userName = request.getUsername();
         request.setPassword(encoder.encode(request.getPassword()));
         if(userExistsByPhoneNumberOrEmail(email, phoneNumber)) throw new EmailOrPhoneNumberExistsException("Email or PhoneNumber has already been used");
         else if(userNameExists(userName)) throw new UsernameAlreadyExistsException("This User "+userName+" has already been used Try another one");
@@ -60,6 +58,14 @@ public class UserServiceImpl implements UserService{
         else exists = false;
 
         return exists;
+    }
+
+    private void validateRequest(CreateAccountRequest request){
+        if(request.getUsername() == null || request.getEmail() == null || request.getPhoneNumber() == null || request.getUsername().equals("")){
+            throw new FieldsRequiredExecption("field required");
+        } else if (request.getUsername().length() < 5 || request.getEmail().equals("")|| request.getEmail().length() < 5 || request.getPhoneNumber().length() < 11 || request.getPhoneNumber().equals(" ")) {
+            throw new FieldsRequiredExecption("field required");
+        }
     }
 
     public boolean userExistsByPhoneNumberOrEmail(String email, String phoneNumber){
