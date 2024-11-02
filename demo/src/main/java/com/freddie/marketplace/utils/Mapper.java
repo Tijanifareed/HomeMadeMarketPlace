@@ -6,8 +6,19 @@ import com.freddie.marketplace.data.model.Product;
 import com.freddie.marketplace.data.model.ProductStatus;
 import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.model.UserRole;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class Mapper {
+
+
+
+
     public static User createUserMapper(CreateAccountRequest request){
         User user = new User();
         user.setUsername(request.getUsername());
@@ -33,4 +44,10 @@ public class Mapper {
         product.setStatus(ProductStatus.PENDING);
         return product;
     }
+
+
+
+
+
+
 }

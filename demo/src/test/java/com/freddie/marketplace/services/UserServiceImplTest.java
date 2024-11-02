@@ -1,5 +1,6 @@
 package com.freddie.marketplace.services;
 
+import com.cloudinary.Cloudinary;
 import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
 import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
@@ -50,7 +51,7 @@ class UserServiceImplTest {
     private CreateAccountRequest createUser() {
         CreateAccountRequest request = new CreateAccountRequest();
         request.setUsername("fareed");
-        request.setEmail("freddie2810@gmail.coms");
+        request.setEmail("freddieteejay0@gmail.com");
         request.setPassword("olamide");
         request.setAddress("Badagry");
         request.setPhoneNumber("090223946768");
@@ -63,7 +64,7 @@ class UserServiceImplTest {
     private CreateAccountRequest createUser2() {
         CreateAccountRequest request = new CreateAccountRequest();
         request.setUsername("fareed");
-        request.setEmail("freddie2810@gmail.comsss");
+        request.setEmail("freddie2810@gmail.com");
         request.setPassword("olamide");
         request.setAddress("Badagry");
         request.setPhoneNumber("09022773946768");
@@ -141,10 +142,13 @@ class UserServiceImplTest {
         CreateAccountRequest request = createUser2();
         CreateAccountResponse response = userService.createNewUser(request);
         String userName = request.getUsername();
+
         System.out.println(userName);
         User user = userRepository.findByUsername(userName);
         AddProductRequest request1 = addNewProduct(user.getId());
         assertThrows(NotASellerException.class, ()-> userService.addProduct(request1));
     }
+
+
 
 }

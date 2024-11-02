@@ -16,6 +16,9 @@ import com.freddie.marketplace.data.model.UserRole;
 import com.freddie.marketplace.data.repositories.ProductRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,9 +35,15 @@ import static com.freddie.marketplace.utils.Validators.validateRequest;
 import static com.freddie.marketplace.utils.Validators.validateRequestForProduct;
 
 
+
+
+
 @Service
 //@AllArgsConstructor
 public class UserServiceImpl implements UserService{
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
     @Autowired
@@ -58,9 +67,10 @@ public class UserServiceImpl implements UserService{
         request.setPassword(encoder.encode(request.getPassword()));
         if(userExistsByPhoneNumberOrEmail(email, phoneNumber)) throw new EmailOrPhoneNumberExistsException("Email or PhoneNumber has already been used");
         else if(userNameExists(userName)) throw new UsernameAlreadyExistsException("This User "+userName+" has already been used Try another one");
-        System.out.println(userRepository.existsByEmail(email));
+//        System.out.println(userRepository.existsByEmail(email));
         User user = createUserMapper(request);
         userRepository.save(user);
+        sendEmail(email,userName);
         CreateAccountResponse response = new CreateAccountResponse();
         response.setMessage("Account Created Successfully");
         return response;
@@ -120,6 +130,29 @@ public class UserServiceImpl implements UserService{
                 }
             }
         }
+
+    }
+
+
+
+    @Value("$(RealMart)")
+    private  String fromEmailId;
+
+    public  void sendEmail(String userEmail, String name){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmailId);
+        message.setTo(userEmail);
+        message.setSubject("RealMart Account Verification");
+        message.setText(String.format("""
+                Hi %s,
+
+                Welcome to RealMart! We’re thrilled to have you join our community of creative and discerning shoppers.
+                You now have access to explore a wide range of unique, handmade products crafted by talented sellers. If you're interested in selling on RealMart, feel free to apply within your profile settings—our team will review your application and guide you through the process.
+                Thank you for joining RealMart! If you have any questions, our support team is always here to help.
+                Happy shopping,
+                The RealMart Team
+                """,name));
+        mailSender.send(message);
 
     }
 
