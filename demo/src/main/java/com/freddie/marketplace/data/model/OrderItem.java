@@ -12,10 +12,10 @@ public class OrderItem {
     private Long id;
 
 
-    private Long productId;  // The product being purchased
+    private Long productId;
 
 
-    private Long orderId;  // The order this item belongs to
+    private Long orderId;
 
     private int quantity;
 }

@@ -8,6 +8,7 @@ import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
 import com.freddie.marketplace.DTOS.Responses.LoginResponse;
 import com.freddie.marketplace.Exceptions.EmailOrPhoneNumberExistsException;
 import com.freddie.marketplace.Exceptions.FieldsRequiredExecption;
+import com.freddie.marketplace.Exceptions.NotASellerException;
 import com.freddie.marketplace.Exceptions.UsernameAlreadyExistsException;
 import com.freddie.marketplace.data.model.Product;
 import com.freddie.marketplace.data.model.User;
@@ -20,6 +21,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import static com.freddie.marketplace.utils.Mapper.createUserMapper;
 import static com.freddie.marketplace.utils.Mapper.addProductMapper;
 import static com.freddie.marketplace.utils.Validators.validateRequest;
@@ -61,11 +67,7 @@ public class UserServiceImpl implements UserService{
     }
 
     private boolean userNameExists(String userName) {
-        boolean exists = false;
-        if(userRepository.existsByUsername(userName)) exists = true;
-        else exists = false;
-
-        return exists;
+        return userRepository.existsByUsername(userName);
     }
 
 
@@ -97,6 +99,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public AddProductResponse addProduct(AddProductRequest request1) {
+
+        validateThatUserIsSeller(request1.getSeller_id());
         validateRequestForProduct(request1);
         Product product = addProductMapper(request1);
         productRepository.save(product);
@@ -106,8 +110,18 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
+    private void validateThatUserIsSeller(Long sellerId) {
+        List<User> users = userRepository.findAll();
+        User user = null;
+        for(User user1: users){
+            if(Objects.equals(user1.getId(), sellerId)){
+                if(user1.getRole() == UserRole.BUYER || user1.getRole() == null){
+                    throw new NotASellerException("You need to be a Seller to perform this action");
+                }
+            }
+        }
 
-
+    }
 
 
 }

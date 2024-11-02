@@ -12,9 +12,8 @@ public class CreateAccountRequest {
     private String username;
     private String email;
     private String password;
-    private String adress;
+    private String address;
     private String phoneNumber;
-    private UserRole role;
     private String profilePicture;
     private String bio;
 

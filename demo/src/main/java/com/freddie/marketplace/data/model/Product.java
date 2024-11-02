@@ -20,10 +20,10 @@ public class Product {
     private long sellerId;  // The seller who listed the product
     @Enumerated(EnumType.STRING)
     private CategoryType category;  // Product category (e.g., Crafts, Art)
-
     @ElementCollection
     private List<String> images;  // Cloudinary URLs for product images
-
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
     private int stock;  // Quantity available for
 
     @OneToMany
