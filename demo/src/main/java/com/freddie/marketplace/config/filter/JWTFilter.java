@@ -1,7 +1,7 @@
 package com.freddie.marketplace.config.filter;
 
-import com.freddie.marketplace.services.JWTService;
-import com.freddie.marketplace.services.MyUserDetailService;
+import com.freddie.marketplace.services.jwt.JWTService;
+import com.freddie.marketplace.services.jwt.MyUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

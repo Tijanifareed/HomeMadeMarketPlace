@@ -2,14 +2,8 @@ package com.freddie.marketplace.utils;
 
 import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
-import com.freddie.marketplace.data.model.Product;
-import com.freddie.marketplace.data.model.ProductStatus;
-import com.freddie.marketplace.data.model.User;
-import com.freddie.marketplace.data.model.UserRole;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import com.freddie.marketplace.DTOS.Requests.SellerApplicationRequest;
+import com.freddie.marketplace.data.model.*;
 import org.springframework.stereotype.Component;
 
 
@@ -43,6 +37,16 @@ public class Mapper {
         product.setStock(request.getStock());
         product.setStatus(ProductStatus.PENDING);
         return product;
+    }
+
+    public static Seller mapSeller(SellerApplicationRequest request){
+        Seller seller = new Seller();
+        seller.setUserId(request.getUserId());
+        seller.setBvn(request.getBvn());
+        seller.setNin(request.getNin());
+        seller.setIdCardUrl(request.getIdCardUrl());
+        seller.setPortfolio(request.getPortfolio());
+        return seller;
     }
 
 

@@ -1,6 +1,5 @@
 package com.freddie.marketplace.services;
 
-import com.cloudinary.Cloudinary;
 import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
 import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
@@ -12,6 +11,8 @@ import com.freddie.marketplace.data.model.CategoryType;
 import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.repositories.ProductRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
+import com.freddie.marketplace.services.seller.SellerService;
+import com.freddie.marketplace.services.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ class UserServiceImplTest {
     private UserRepository userRepository;
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private SellerService sellerService;
 
     @BeforeEach
     public void setup(){
@@ -51,11 +55,11 @@ class UserServiceImplTest {
     private CreateAccountRequest createUser() {
         CreateAccountRequest request = new CreateAccountRequest();
         request.setUsername("fareed");
-        request.setEmail("freddieteejay0@gmail.com");
+        request.setEmail("fareedtijani2810@gmail.com");
         request.setPassword("olamide");
         request.setAddress("Badagry");
         request.setPhoneNumber("090223946768");
-        request.setProfilePicture("urlwt37373gfff.png");
+//        request.setProfilePicture("u");
         request.setBio("i am good trader");
         return request;
     }
@@ -108,7 +112,7 @@ class UserServiceImplTest {
         User user = userRepository.findByUsername(userName);
         CreateAccountResponse response = userService.createNewUser(request);
         AddProductRequest request1 = addNewProduct(user.getId());
-        AddProductResponse response1 = userService.addProduct(request1);
+        AddProductResponse response1 = sellerService.addProduct(request1);
         assertThat(response1.getMessage()).isEqualTo("weed is added to your products successfully");
     }
 
@@ -133,7 +137,7 @@ class UserServiceImplTest {
         CreateAccountResponse response = userService.createNewUser(request);
         AddProductRequest request1 = addNewProduct(user.getId());
 //        AddProductResponse response1 = userService.addProduct(request1);
-        assertThrows(FieldsRequiredExecption.class, ()-> userService.addProduct(request1));
+        assertThrows(FieldsRequiredExecption.class, ()-> sellerService.addProduct(request1));
     }
 
 
@@ -146,7 +150,7 @@ class UserServiceImplTest {
         System.out.println(userName);
         User user = userRepository.findByUsername(userName);
         AddProductRequest request1 = addNewProduct(user.getId());
-        assertThrows(NotASellerException.class, ()-> userService.addProduct(request1));
+        assertThrows(NotASellerException.class, ()-> sellerService.addProduct(request1));
     }
 
 

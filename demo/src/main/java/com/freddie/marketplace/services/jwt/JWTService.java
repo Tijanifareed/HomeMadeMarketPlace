@@ -1,4 +1,4 @@
-package com.freddie.marketplace.services;
+package com.freddie.marketplace.services.jwt;
 
 
 

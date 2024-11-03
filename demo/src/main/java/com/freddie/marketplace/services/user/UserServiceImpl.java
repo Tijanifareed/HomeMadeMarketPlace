@@ -1,20 +1,21 @@
-package com.freddie.marketplace.services;
+package com.freddie.marketplace.services.user;
 
-import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
 import com.freddie.marketplace.DTOS.Requests.LoginRequest;
-import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
 import com.freddie.marketplace.DTOS.Responses.LoginResponse;
+import com.freddie.marketplace.DTOS.Responses.SellerApplicationResponse;
+import com.freddie.marketplace.DTOS.Requests.SellerApplicationRequest;
 import com.freddie.marketplace.Exceptions.EmailOrPhoneNumberExistsException;
-import com.freddie.marketplace.Exceptions.FieldsRequiredExecption;
-import com.freddie.marketplace.Exceptions.NotASellerException;
+import com.freddie.marketplace.Exceptions.UserNotFoundException;
 import com.freddie.marketplace.Exceptions.UsernameAlreadyExistsException;
-import com.freddie.marketplace.data.model.Product;
+import com.freddie.marketplace.data.model.Seller;
 import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.model.UserRole;
 import com.freddie.marketplace.data.repositories.ProductRepository;
+import com.freddie.marketplace.data.repositories.SellerRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
+import com.freddie.marketplace.services.jwt.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -27,23 +28,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import static com.freddie.marketplace.utils.Mapper.createUserMapper;
-import static com.freddie.marketplace.utils.Mapper.addProductMapper;
+import static com.freddie.marketplace.utils.Mapper.*;
 import static com.freddie.marketplace.utils.Validators.validateRequest;
-import static com.freddie.marketplace.utils.Validators.validateRequestForProduct;
-
-
-
 
 
 @Service
 //@AllArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private SellerRepository sellerRepository;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
     @Autowired
@@ -70,7 +68,7 @@ public class UserServiceImpl implements UserService{
 //        System.out.println(userRepository.existsByEmail(email));
         User user = createUserMapper(request);
         userRepository.save(user);
-        sendEmail(email,userName);
+//        sendEmail(email,userName);
         CreateAccountResponse response = new CreateAccountResponse();
         response.setMessage("Account Created Successfully");
         return response;
@@ -108,30 +106,40 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public AddProductResponse addProduct(AddProductRequest request1) {
-
-        validateThatUserIsSeller(request1.getSeller_id());
-        validateRequestForProduct(request1);
-        Product product = addProductMapper(request1);
-        productRepository.save(product);
-        AddProductResponse response = new AddProductResponse();
-        String productName = product.getProductName();
-        response.setMessage(productName+" is added to your products successfully");
-        return response;
+    public SellerApplicationResponse applyToBeASellerWith(SellerApplicationRequest request) {
+        Seller seller = mapSeller(request);
+        sellerRepository.save(seller);
+        return null;
     }
 
-    private void validateThatUserIsSeller(Long sellerId) {
-        List<User> users = userRepository.findAll();
-        User user = null;
-        for(User user1: users){
-            if(Objects.equals(user1.getId(), sellerId)){
-                if(user1.getRole() == UserRole.BUYER || user1.getRole() == null){
-                    throw new NotASellerException("You need to be a Seller to perform this action");
-                }
-            }
-        }
+//    @Override
+//    public AddProductResponse addProduct(AddProductRequest request1) {
+//
+//        validateThatUserIsSeller(request1.getSeller_id());
+//        validateRequestForProduct(request1);
+//        Product product = addProductMapper(request1);
+//        productRepository.save(product);
+//        AddProductResponse response = new AddProductResponse();
+//        response.setMessage("""
+//                Your product is going through confirmation.
+//                We will send a notification to your Email when your
+//                product has been confirmed Thank you for using RealMart!!!
+//                """);
+//        return response;
+//    }
 
-    }
+//    private void validateThatUserIsSeller(Long sellerId) {
+//        List<User> users = userRepository.findAll();
+//        User user = null;
+//        for(User user1: users){
+//            if(Objects.equals(user1.getId(), sellerId)){
+//                if(user1.getRole() == UserRole.BUYER || user1.getRole() == null){
+//                    throw new NotASellerException("You need to be a Seller to perform this action");
+//                }
+//            }
+//        }
+//
+//    }
 
 
 
@@ -153,6 +161,19 @@ public class UserServiceImpl implements UserService{
                 The RealMart Team
                 """,name));
         mailSender.send(message);
+
+    }
+
+    @Override
+    public void updateUserProfilePicture(Long userId, String imageUrl){
+        List<User> users = userRepository.findAll();
+        for(User user : users){
+            if(Objects.equals(user.getId(), userId)){
+                System.out.println(user.toString());
+                user.setProfilePicture(imageUrl);
+                userRepository.save(user);
+            }else throw new UserNotFoundException("User not found");
+        }
 
     }
 

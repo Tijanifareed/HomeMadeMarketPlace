@@ -1,6 +1,5 @@
-package com.freddie.marketplace.services;
+package com.freddie.marketplace.services.jwt;
 
-import com.freddie.marketplace.Exceptions.EmailIsNotRegisteredException;
 import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.model.UserPrincipal;
 import com.freddie.marketplace.data.repositories.UserRepository;
