@@ -33,9 +33,7 @@ public class Validators {
         else if(request.getProductType() == null){
             throw new FieldsRequiredExecption("All fields are required");
         }
-        else if(request.getImages() == null){
-            throw new FieldsRequiredExecption("All fields are required");
-        } else if (request.getStock() == 0) {
+       else if (request.getStock() == 0) {
             throw new FieldsRequiredExecption("All fields are required");
         }
     }

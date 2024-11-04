@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,20 +14,29 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String productName;
     private String description;
     private Double price;
+    private Long sellerId;
 
-    private long sellerId;  // The seller who listed the product
     @Enumerated(EnumType.STRING)
-    private CategoryType category;  // Product category (e.g., Crafts, Art)
+    private CategoryType category; // Product category (e.g., Crafts, Art)
+
     @ElementCollection
-    private List<String> images;  // Cloudinary URLs for product images
+    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image_url")
+    private List<String> images = new ArrayList<>(); // Cloudinary URLs for product images
+
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
-    private int stock;  // Quantity available for
 
-    @OneToMany
-    private List<Review> reviews;
+    private int stock;  // Quantity available
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>(); // List of reviews for the product
+
+    // Getters and Setters
+    // You may need additional helper methods if needed for adding images or reviews
 }
 

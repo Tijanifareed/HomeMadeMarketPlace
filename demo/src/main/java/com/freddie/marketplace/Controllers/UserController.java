@@ -9,8 +9,8 @@ import com.freddie.marketplace.DTOS.Responses.*;
 import com.freddie.marketplace.services.image.ImageService;
 import com.freddie.marketplace.services.seller.SellerService;
 import com.freddie.marketplace.services.user.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,12 +62,13 @@ public class UserController {
         }
     }
 
-    @PostMapping("/addProduct")
-    public ResponseEntity<?> addProduct(@RequestBody AddProductRequest request){
+    @PostMapping(value = "/addProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addProduct(@ModelAttribute AddProductRequest request){
+
         try{
             AddProductResponse response = sellerService.addProduct(request);
             return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
-        }catch(RuntimeException exception){
+        }catch(RuntimeException | IOException exception){
             return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
         }
     }
@@ -79,9 +80,9 @@ public class UserController {
         try{
             String imageUrl = imageService.uploadImage(request.getFile());
             userService.updateUserProfilePicture(userId, imageUrl);
-            return ResponseEntity.ok(new ProfilePictureUploadResponse(imageUrl));
+            return ResponseEntity.ok(new PictureUploadResponse(imageUrl));
         }catch (IOException exception){
-            return ResponseEntity.status(500).body(new ProfilePictureUploadResponse("Image upload failed"));
+            return ResponseEntity.status(500).body(new PictureUploadResponse("Image upload failed"));
         }
 
     }

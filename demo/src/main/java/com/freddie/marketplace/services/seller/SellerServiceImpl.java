@@ -8,11 +8,17 @@ import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.model.UserRole;
 import com.freddie.marketplace.data.repositories.ProductRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
+import com.freddie.marketplace.services.image.ImageService;
+import com.freddie.marketplace.services.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.freddie.marketplace.utils.Mapper.addProductMapper;
 import static com.freddie.marketplace.utils.Validators.validateRequestForProduct;
@@ -26,21 +32,75 @@ public class SellerServiceImpl implements SellerService {
     @Autowired
     private ProductRepository productRepository;
 
+    private final ImageService imageService;
+    @Autowired
+    private UserServiceImpl userServiceImpl;
+
+    public SellerServiceImpl(ImageService imageService) {
+        this.imageService = imageService;
+    }
+
+
+
+        @Override
+        public AddProductResponse addProduct(AddProductRequest request1) throws IOException {
+            validateRequestForProduct(request1);
+
+            // Map the request to a Product entity and save it
+            Product product = addProductMapper(request1);
+
+            productRepository.save(product);
+            System.out.println("Product ID: " + product.getId());
+
+            // Initialize a list to hold image URLs
+            List<String> imageUrls = new ArrayList<>();
+
+            // Upload each file and add the URL to the list
+            for (MultipartFile file : request1.getFile()) { // Assuming `files` is the field with multiple images
+                String imageUrl = imageService.uploadImage(file);
+                imageUrls.add(imageUrl);
+            }
+
+            // Add the list of image URLs to the product's images
+            updateProductPicture(product.getId(), imageUrls);
+
+            // Create the response with a confirmation message
+            AddProductResponse response = new AddProductResponse();
+            response.setMessage("""
+        Your product is going through confirmation.
+        We will send a notification to your Email when your
+        product has been confirmed. Thank you for using RealMart!
+        """);
+
+            return response;
+
+        }
+
+
+
 
     @Override
-    public AddProductResponse addProduct(AddProductRequest request1) {
-        validateThatUserIsSeller(request1.getSeller_id());
-        validateRequestForProduct(request1);
-        Product product = addProductMapper(request1);
-        productRepository.save(product);
-        AddProductResponse response = new AddProductResponse();
-        response.setMessage("""
-                Your product is going through confirmation.
-                We will send a notification to your Email when your
-                product has been confirmed Thank you for using RealMart!!!
-                """);
-        return response;
+    public void updateProductPicture(Long productId, List<String> imageUrls) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            List<String> images = product.getImages();
+
+            // Add all new URLs to the existing images list
+            images.addAll(imageUrls);
+
+            // Set the updated images list back to the product
+            product.setImages(images);
+
+            // Save the updated product
+            productRepository.save(product);
+        } else {
+            throw new RuntimeException("Product with ID " + productId + " not found");
+        }
     }
+
+
 
 
     private void validateThatUserIsSeller(Long sellerId) {

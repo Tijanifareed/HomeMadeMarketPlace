@@ -33,7 +33,6 @@ public class Mapper {
         product.setPrice(request.getPrice());
         product.setSellerId(request.getSeller_id());
         product.setCategory(request.getProductType());
-        product.setImages(request.getImages());
         product.setStock(request.getStock());
         product.setStatus(ProductStatus.PENDING);
         return product;
