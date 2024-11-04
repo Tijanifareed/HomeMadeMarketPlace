@@ -2,8 +2,10 @@ package com.freddie.marketplace.services;
 
 import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
+import com.freddie.marketplace.DTOS.Requests.UpdateAccountRequest;
 import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
+import com.freddie.marketplace.DTOS.Responses.GetProfileResponse;
 import com.freddie.marketplace.Exceptions.FieldsRequiredExecption;
 import com.freddie.marketplace.Exceptions.NotASellerException;
 import com.freddie.marketplace.Exceptions.UsernameAlreadyExistsException;
@@ -18,9 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.freddie.marketplace.Exceptions.EmailOrPhoneNumberExistsException;
-
+import java.io.IOException;
 import java.util.ArrayList;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -106,7 +107,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void testThatSellerCanAddProduct(){
+    public void testThatSellerCanAddProduct() throws IOException {
         CreateAccountRequest request = createUser2();
         String userName = request.getUsername();
         User user = userRepository.findByUsername(userName);
@@ -124,7 +125,6 @@ class UserServiceImplTest {
         request.setPrice(1000.0);
         request.setSeller_id(id);
         request.setProductType(CategoryType.FOOD);
-        request.setImages(images);
         request.setStock(6);
         return request;
     }
@@ -153,6 +153,23 @@ class UserServiceImplTest {
         assertThrows(NotASellerException.class, ()-> sellerService.addProduct(request1));
     }
 
+    @Test
+    public void testThatUserCanGetTheirProfile(){
+        CreateAccountRequest request = createUser2();
+        CreateAccountResponse response = userService.createNewUser(request);
+        System.out.println(response.getUserId());
+        GetProfileResponse response1 = userService.getUserprofile(response.getUserId());
+        System.out.println(response1.toString());
+        assertThat(response1.getUserName()).isNotNull();
 
+    }
+
+
+    @Test
+    public void testThatUserCanUpdateProfile(){
+        CreateAccountRequest request = createUser2();
+        CreateAccountResponse response = userService.createNewUser(request);
+        UpdateAccountRequest request1 = new UpdateAccountRequest();
+    }
 
 }

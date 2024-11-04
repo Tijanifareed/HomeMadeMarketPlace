@@ -8,4 +8,5 @@ import lombok.Setter;
 @Setter
 public class CreateAccountResponse {
     private String message;
+    private long userId;
 }

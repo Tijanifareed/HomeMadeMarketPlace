@@ -3,6 +3,7 @@ package com.freddie.marketplace.services.user;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
 import com.freddie.marketplace.DTOS.Requests.LoginRequest;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
+import com.freddie.marketplace.DTOS.Responses.GetProfileResponse;
 import com.freddie.marketplace.DTOS.Responses.LoginResponse;
 import com.freddie.marketplace.DTOS.Responses.SellerApplicationResponse;
 import com.freddie.marketplace.DTOS.Requests.SellerApplicationRequest;
@@ -70,6 +71,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 //        sendEmail(email,userName);
         CreateAccountResponse response = new CreateAccountResponse();
+        response.setUserId(user.getId());
         response.setMessage("Account Created Successfully");
         return response;
     }
@@ -112,35 +114,6 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-//    @Override
-//    public AddProductResponse addProduct(AddProductRequest request1) {
-//
-//        validateThatUserIsSeller(request1.getSeller_id());
-//        validateRequestForProduct(request1);
-//        Product product = addProductMapper(request1);
-//        productRepository.save(product);
-//        AddProductResponse response = new AddProductResponse();
-//        response.setMessage("""
-//                Your product is going through confirmation.
-//                We will send a notification to your Email when your
-//                product has been confirmed Thank you for using RealMart!!!
-//                """);
-//        return response;
-//    }
-
-//    private void validateThatUserIsSeller(Long sellerId) {
-//        List<User> users = userRepository.findAll();
-//        User user = null;
-//        for(User user1: users){
-//            if(Objects.equals(user1.getId(), sellerId)){
-//                if(user1.getRole() == UserRole.BUYER || user1.getRole() == null){
-//                    throw new NotASellerException("You need to be a Seller to perform this action");
-//                }
-//            }
-//        }
-//
-//    }
-
 
 
     @Value("$(RealMart)")
@@ -176,6 +149,33 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
+    public  User findUserById(Long userId){
+
+        List<User> users = userRepository.findAll();
+        for(User user : users){
+            if(Objects.equals(user.getId(), userId)){
+             return user;
+            }
+        }
+        throw new UserNotFoundException("User not found");
+    }
+
+    @Override
+    public GetProfileResponse getUserprofile(Long userId) {
+        User user = findUserById(userId);
+        GetProfileResponse response = new GetProfileResponse();
+        response.setUserName(user.getUsername());
+        response.setPhoneNumber(user.getPhoneNumber());
+        response.setEmail(user.getEmail());
+        response.setAddress(user.getAdress());
+        response.setRole(String.valueOf(user.getRole()));
+        response.setProfilePicture(user.getProfilePicture());
+        response.setBio(user.getBio());
+        return response;
+    }
+
+    public
 
 
 }

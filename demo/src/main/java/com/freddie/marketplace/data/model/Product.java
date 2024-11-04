@@ -14,15 +14,12 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String productName;
     private String description;
     private Double price;
     private Long sellerId;
-
     @Enumerated(EnumType.STRING)
-    private CategoryType category; // Product category (e.g., Crafts, Art)
-
+    private CategoryType category;
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
@@ -36,7 +33,5 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>(); // List of reviews for the product
 
-    // Getters and Setters
-    // You may need additional helper methods if needed for adding images or reviews
 }
 
