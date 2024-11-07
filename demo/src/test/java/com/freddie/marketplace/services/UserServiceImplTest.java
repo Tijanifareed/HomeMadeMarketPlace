@@ -2,6 +2,7 @@ package com.freddie.marketplace.services;
 
 import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
+import com.freddie.marketplace.DTOS.Requests.GetProfileRequest;
 import com.freddie.marketplace.DTOS.Requests.UpdateAccountRequest;
 import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
@@ -158,18 +159,21 @@ class UserServiceImplTest {
         CreateAccountRequest request = createUser2();
         CreateAccountResponse response = userService.createNewUser(request);
         System.out.println(response.getUserId());
-        GetProfileResponse response1 = userService.getUserprofile(response.getUserId());
+        GetProfileRequest request1 = new GetProfileRequest();
+        request1.setUserId(response.getUserId());
+        GetProfileResponse response1 = userService.getUserprofile(request1);
         System.out.println(response1.toString());
         assertThat(response1.getUserName()).isNotNull();
 
     }
 
 
-    @Test
-    public void testThatUserCanUpdateProfile(){
-        CreateAccountRequest request = createUser2();
-        CreateAccountResponse response = userService.createNewUser(request);
-        UpdateAccountRequest request1 = new UpdateAccountRequest();
-    }
+//    @Test
+//    public void testThatUserCanUpdateProfile(){
+//        CreateAccountRequest request = createUser2();
+//        CreateAccountResponse response = userService.createNewUser(request);
+//        UpdateAccountRequest request1 = new UpdateAccountRequest();
+//
+//    }
 
 }

@@ -2,9 +2,11 @@ package com.freddie.marketplace.services.jwt;
 
 
 
+import com.freddie.marketplace.data.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,9 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
+    @Autowired
+    UserRepository userRepository;
+
     private String secretkey = "";
 
     public JWTService() {
@@ -35,14 +40,16 @@ public class JWTService {
         }
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, Long userId) {
+
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);  // Add the userId as a custom claim
         return Jwts.builder()
                 .claims()
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .and()
                 .signWith(getKey())
                 .compact();

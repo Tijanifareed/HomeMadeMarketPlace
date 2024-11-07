@@ -1,6 +1,7 @@
 package com.freddie.marketplace.services.user;
 
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
+import com.freddie.marketplace.DTOS.Requests.GetProfileRequest;
 import com.freddie.marketplace.DTOS.Requests.LoginRequest;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
 import com.freddie.marketplace.DTOS.Responses.GetProfileResponse;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.freddie.marketplace.utils.Mapper.*;
 import static com.freddie.marketplace.utils.Validators.validateRequest;
@@ -90,14 +92,12 @@ public class UserServiceImpl implements UserService {
     public LoginResponse verifyUserWith(LoginRequest request) {
         String userName = request.getUsername();
         User user = userRepository.findByUsername(userName);
-        UserRole role = user.getRole();
         Authentication authentication =
                 authmanager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         if(authentication.isAuthenticated()){
             LoginResponse response = new LoginResponse();
             response.setMessage("Success");
-            response.setRole(role);
-            String token = jwtService.generateToken(request.getUsername());
+            String token = jwtService.generateToken(request.getUsername(), user.getId());
             response.setToken(token);
             response.setUserName(userName);
             return response;
@@ -139,14 +139,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserProfilePicture(Long userId, String imageUrl){
-        List<User> users = userRepository.findAll();
-        for(User user : users){
-            if(Objects.equals(user.getId(), userId)){
-                System.out.println(user.toString());
-                user.setProfilePicture(imageUrl);
-                userRepository.save(user);
-            }else throw new UserNotFoundException("User not found");
-        }
+
+        Optional<User> user = userRepository.findById(userId);
+
+        user.orElseThrow(() -> new RuntimeException("user not found")).setProfilePicture(imageUrl);
+        userRepository.save(user.get());
 
     }
 
@@ -162,8 +159,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetProfileResponse getUserprofile(Long userId) {
-        User user = findUserById(userId);
+    public GetProfileResponse getUserprofile(GetProfileRequest request) {
+        User user = findUserById(request.getUserId());
         GetProfileResponse response = new GetProfileResponse();
         response.setUserName(user.getUsername());
         response.setPhoneNumber(user.getPhoneNumber());
@@ -175,7 +172,7 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
-    public
+
 
 
 }

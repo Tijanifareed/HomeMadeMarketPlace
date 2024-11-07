@@ -1,10 +1,7 @@
 package com.freddie.marketplace.Controllers;
 
 
-import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
-import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
-import com.freddie.marketplace.DTOS.Requests.LoginRequest;
-import com.freddie.marketplace.DTOS.Requests.PictureUploadRequest;
+import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.*;
 import com.freddie.marketplace.services.image.ImageService;
 import com.freddie.marketplace.services.seller.SellerService;
@@ -20,8 +17,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@CrossOrigin(origins = "*")
-
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -78,6 +74,7 @@ public class UserController {
     @PostMapping("/upload-picture/{userId}")
     public ResponseEntity<?> uploadProfilePicture(@PathVariable Long userId, @ModelAttribute PictureUploadRequest request){
         try{
+            System.out.println(request.toString());
             String imageUrl = imageService.uploadImage(request.getFile());
             userService.updateUserProfilePicture(userId, imageUrl);
             return ResponseEntity.ok(new PictureUploadResponse(imageUrl));
@@ -86,6 +83,19 @@ public class UserController {
         }
 
     }
+
+    @PostMapping("/profile")
+    public ResponseEntity<?> getUserProfile(@RequestBody GetProfileRequest request) {
+        try {
+            System.out.println(request.toString());
+            GetProfileResponse response = userService.getUserprofile(request);
+            return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
+        }catch (RuntimeException exception){
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
+        }
+    }
+
+
 
 
 }
