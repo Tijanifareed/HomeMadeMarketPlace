@@ -1,18 +1,17 @@
 package com.freddie.marketplace.services;
 
-import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
-import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
-import com.freddie.marketplace.DTOS.Requests.GetProfileRequest;
-import com.freddie.marketplace.DTOS.Requests.UpdateAccountRequest;
+import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
 import com.freddie.marketplace.DTOS.Responses.GetProfileResponse;
+import com.freddie.marketplace.DTOS.Responses.SellerApplicationResponse;
 import com.freddie.marketplace.Exceptions.FieldsRequiredExecption;
 import com.freddie.marketplace.Exceptions.NotASellerException;
 import com.freddie.marketplace.Exceptions.UsernameAlreadyExistsException;
 import com.freddie.marketplace.data.model.CategoryType;
 import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.repositories.ProductRepository;
+import com.freddie.marketplace.data.repositories.SellerRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
 import com.freddie.marketplace.services.seller.SellerService;
 import com.freddie.marketplace.services.user.UserService;
@@ -36,11 +35,14 @@ class UserServiceImplTest {
 
     @Autowired
     private SellerService sellerService;
+    @Autowired
+    private SellerRepository sellerRepository;
 
     @BeforeEach
     public void setup(){
         productRepository.deleteAll();
         userRepository.deleteAll();
+        sellerRepository.deleteAll();
     }
 
     @Autowired
@@ -169,11 +171,17 @@ class UserServiceImplTest {
 
 
 //    @Test
-//    public void testThatUserCanUpdateProfile(){
-//        CreateAccountRequest request = createUser2();
-//        CreateAccountResponse response = userService.createNewUser(request);
-//        UpdateAccountRequest request1 = new UpdateAccountRequest();
-//
+//    public void testThatWhenAUserApplyToBeASellerItsOnPendingByDefault(){
+//        CreateAccountRequest request1 = createUser2();
+//        CreateAccountResponse response = userService.createNewUser(request1);
+//        SellerApplicationRequest request = new SellerApplicationRequest();
+//        request.setUserId(response.getUserId());
+//        request.setBvn("hhdue887ye78777d8nd8en88");
+//        request.setNin("77e8e7e7774747h7r7r648jj8eje8eey8");
+//        request.setPortfolio("etette6e67e77hd77de7h");
+//        request.setIdCardUrl("eycbn xaxdf ch dz");
+//        SellerApplicationResponse response1 = userService.applyToBeASellerWith(request);
+//        assertThat(response1.getMessage()).isEqualTo("Your application has been received and is going under review an email will be sent to you to know your status");
 //    }
 
 }

@@ -10,12 +10,14 @@ import com.freddie.marketplace.DTOS.Responses.SellerApplicationResponse;
 import com.freddie.marketplace.DTOS.Requests.SellerApplicationRequest;
 import com.freddie.marketplace.data.model.User;
 
+import java.io.IOException;
+
 public interface UserService {
     CreateAccountResponse createNewUser(CreateAccountRequest request);
 
     LoginResponse verifyUserWith(LoginRequest request);
 
-    SellerApplicationResponse applyToBeASellerWith(SellerApplicationRequest request);
+    SellerApplicationResponse applyToBeASellerWith(SellerApplicationRequest request) throws IOException;
 
     void updateUserProfilePicture(Long userId, String imageUrl);
 

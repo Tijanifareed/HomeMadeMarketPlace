@@ -43,8 +43,7 @@ public class Mapper {
         seller.setUserId(request.getUserId());
         seller.setBvn(request.getBvn());
         seller.setNin(request.getNin());
-        seller.setIdCardUrl(request.getIdCardUrl());
-        seller.setPortfolio(request.getPortfolio());
+        seller.setStatus(ApplicationStatus.PENDING);
         return seller;
     }
 

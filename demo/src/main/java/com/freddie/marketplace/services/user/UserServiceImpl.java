@@ -17,6 +17,7 @@ import com.freddie.marketplace.data.model.UserRole;
 import com.freddie.marketplace.data.repositories.ProductRepository;
 import com.freddie.marketplace.data.repositories.SellerRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
+import com.freddie.marketplace.services.image.ImageService;
 import com.freddie.marketplace.services.jwt.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -57,8 +59,10 @@ public class UserServiceImpl implements UserService {
     private JWTService jwtService;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ImageService imageService;
 
-
+    // CREATE USER
     @Override
     public CreateAccountResponse createNewUser(CreateAccountRequest request) {
         validateRequest(request);
@@ -71,7 +75,7 @@ public class UserServiceImpl implements UserService {
 //        System.out.println(userRepository.existsByEmail(email));
         User user = createUserMapper(request);
         userRepository.save(user);
-//        sendEmail(email,userName);
+        sendEmail(email,userName);
         CreateAccountResponse response = new CreateAccountResponse();
         response.setUserId(user.getId());
         response.setMessage("Account Created Successfully");
@@ -87,7 +91,7 @@ public class UserServiceImpl implements UserService {
     public boolean userExistsByPhoneNumberOrEmail(String email, String phoneNumber){
         return userRepository.existsByEmail(email) || userRepository.existsByPhoneNumber(phoneNumber);
     }
-
+    //LOGIN
     @Override
     public LoginResponse verifyUserWith(LoginRequest request) {
         String userName = request.getUsername();
@@ -108,12 +112,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SellerApplicationResponse applyToBeASellerWith(SellerApplicationRequest request) {
+    public SellerApplicationResponse applyToBeASellerWith(SellerApplicationRequest request) throws IOException {
         Seller seller = mapSeller(request);
         sellerRepository.save(seller);
-        return null;
+        String idCardUrl = imageService.uploadImage(request.getIdCardUrl());
+        String portfolio = imageService.uploadImage(request.getPortfolio());
+        updateSellerRequirements(seller.getId(), idCardUrl, portfolio);
+
+        SellerApplicationResponse response = new SellerApplicationResponse();
+        response.setMessage("Your application has been received and is going under review an email will be sent to you to know your status");
+        return response;
     }
 
+    private void updateSellerRequirements(Long id, String idCardUrl, String portfolio) {
+        Optional<Seller> seller = sellerRepository.findById(id);
+        if(seller.isPresent()){
+        Seller seller1 = seller.get();
+        seller1.setPortfolio(portfolio);
+        seller1.setIdCardUrl(idCardUrl);
+        sellerRepository.save(seller1);
+
+        }else throw new RuntimeException("User not found");
+    }
 
 
     @Value("$(RealMart)")

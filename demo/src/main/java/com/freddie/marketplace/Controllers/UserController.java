@@ -84,6 +84,8 @@ public class UserController {
 
     }
 
+
+
     @PostMapping("/profile")
     public ResponseEntity<?> getUserProfile(@RequestBody GetProfileRequest request) {
         try {
@@ -94,6 +96,19 @@ public class UserController {
             return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
         }
     }
+
+
+    @PostMapping("/sellerApplication")
+    public ResponseEntity<?> sellerApplication(@ModelAttribute SellerApplicationRequest request){
+        try{
+            SellerApplicationResponse response = userService.applyToBeASellerWith(request);
+            return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body(new PictureUploadResponse("Image upload failed"));
+        }
+
+    }
+
 
 
 
