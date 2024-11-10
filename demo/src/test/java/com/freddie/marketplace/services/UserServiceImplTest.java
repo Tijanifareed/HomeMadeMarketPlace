@@ -113,8 +113,9 @@ class UserServiceImplTest {
     public void testThatSellerCanAddProduct() throws IOException {
         CreateAccountRequest request = createUser2();
         String userName = request.getUsername();
-        User user = userRepository.findByUsername(userName);
         CreateAccountResponse response = userService.createNewUser(request);
+        User user = userRepository.findByUsername(userName);
+
         AddProductRequest request1 = addNewProduct(user.getId());
         AddProductResponse response1 = sellerService.addProduct(request1);
         assertThat(response1.getMessage()).isEqualTo("weed is added to your products successfully");

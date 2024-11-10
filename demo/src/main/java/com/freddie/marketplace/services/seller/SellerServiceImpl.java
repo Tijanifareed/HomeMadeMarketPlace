@@ -3,10 +3,10 @@ package com.freddie.marketplace.services.seller;
 import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.Exceptions.NotASellerException;
-import com.freddie.marketplace.data.model.Product;
-import com.freddie.marketplace.data.model.User;
-import com.freddie.marketplace.data.model.UserRole;
+import com.freddie.marketplace.Exceptions.UserNotFoundException;
+import com.freddie.marketplace.data.model.*;
 import com.freddie.marketplace.data.repositories.ProductRepository;
+import com.freddie.marketplace.data.repositories.SellerRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
 import com.freddie.marketplace.services.image.ImageService;
 import com.freddie.marketplace.services.user.UserServiceImpl;
@@ -35,6 +35,8 @@ public class SellerServiceImpl implements SellerService {
     private final ImageService imageService;
     @Autowired
     private UserServiceImpl userServiceImpl;
+    @Autowired
+    private SellerRepository sellerRepository;
 
     public SellerServiceImpl(ImageService imageService) {
         this.imageService = imageService;
@@ -45,6 +47,8 @@ public class SellerServiceImpl implements SellerService {
         @Override
         public AddProductResponse addProduct(AddProductRequest request1) throws IOException {
             validateRequestForProduct(request1);
+            checkThatSellerExists(request1.getSeller_id());
+            validateThatOnlySellerCanAddProduct(request1.getSeller_id());
 
             // Map the request to a Product entity and save it
             Product product = addProductMapper(request1);
@@ -74,6 +78,14 @@ public class SellerServiceImpl implements SellerService {
 
             return response;
 
+        }
+
+
+        public void validateThatOnlySellerCanAddProduct(Long sellerId){
+            Optional<Seller> seller = sellerRepository.findById(sellerId);
+            if(seller.get().getStatus() != ApplicationStatus.APPROVED){
+                throw new NotASellerException("Apply to ba a seller to have access to this feature!!");
+            }
         }
 
 
@@ -114,5 +126,13 @@ public class SellerServiceImpl implements SellerService {
             }
         }
 
+    }
+
+
+    public void checkThatSellerExists(Long sellerId){
+        Optional<Seller> seller = sellerRepository.findById(sellerId);
+        if(seller.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
     }
 }
