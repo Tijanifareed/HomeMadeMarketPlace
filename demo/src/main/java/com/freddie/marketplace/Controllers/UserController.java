@@ -71,12 +71,12 @@ public class UserController {
 
 
 
-    @PostMapping("/upload-picture/{userId}")
-    public ResponseEntity<?> uploadProfilePicture(@PathVariable Long userId, @ModelAttribute PictureUploadRequest request){
+    @PostMapping("/upload-picture")
+    public ResponseEntity<?> uploadProfilePicture(@ModelAttribute PictureUploadRequest request){
         try{
             System.out.println(request.toString());
             String imageUrl = imageService.uploadImage(request.getFile());
-            userService.updateUserProfilePicture(userId, imageUrl);
+            userService.updateUserProfilePicture(request.getId(), imageUrl);
             return ResponseEntity.ok(new PictureUploadResponse(imageUrl));
         }catch (IOException exception){
             return ResponseEntity.status(500).body(new PictureUploadResponse("Image upload failed"));
