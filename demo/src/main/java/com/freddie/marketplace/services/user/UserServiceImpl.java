@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 //        System.out.println(userRepository.existsByEmail(email));
         User user = createUserMapper(request);
         userRepository.save(user);
-//        sendEmail(email,userName);
+        sendEmail(email,userName);
         CreateAccountResponse response = new CreateAccountResponse();
         response.setUserId(user.getId());
         response.setMessage("Account Created Successfully");
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
         updateSellerRequirements(seller.getId(), idCardUrl, portfolio);
 
         SellerApplicationResponse response = new SellerApplicationResponse();
-        response.setMessage("Your application has been received and is going under review an email will be sent to you to know if you ar accepted or not");
+        response.setMessage("Your application has been received and is going under review an email will be sent to you to know if you are accepted or not");
         return response;
     }
 

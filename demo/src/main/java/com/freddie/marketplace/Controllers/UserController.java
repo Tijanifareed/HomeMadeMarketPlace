@@ -101,6 +101,7 @@ public class UserController {
     @PostMapping("/sellerApplication")
     public ResponseEntity<?> sellerApplication(@ModelAttribute SellerApplicationRequest request){
         try{
+            System.out.println(request.toString());
             SellerApplicationResponse response = userService.applyToBeASellerWith(request);
             return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
         } catch (IOException e) {
