@@ -11,9 +11,11 @@ import com.freddie.marketplace.DTOS.Requests.SellerApplicationRequest;
 import com.freddie.marketplace.Exceptions.EmailOrPhoneNumberExistsException;
 import com.freddie.marketplace.Exceptions.UserNotFoundException;
 import com.freddie.marketplace.Exceptions.UsernameAlreadyExistsException;
+import com.freddie.marketplace.data.model.Admin;
 import com.freddie.marketplace.data.model.Seller;
 import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.model.UserRole;
+import com.freddie.marketplace.data.repositories.AdminRepository;
 import com.freddie.marketplace.data.repositories.ProductRepository;
 import com.freddie.marketplace.data.repositories.SellerRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
@@ -61,6 +63,8 @@ public class UserServiceImpl implements UserService {
     private ProductRepository productRepository;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private AdminRepository adminRepository;
 
     // CREATE USER
     @Override

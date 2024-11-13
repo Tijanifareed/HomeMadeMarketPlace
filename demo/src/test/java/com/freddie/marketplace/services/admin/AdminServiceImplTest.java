@@ -12,9 +12,8 @@ class AdminServiceImplTest {
     @Autowired
     AdminService adminService;
 
-    @Test
-    public void testThatWhenAUserApplyToBeASellerItsOnPendingByDefault(){
+   @Test
+    public void testThatAdminCanGetSellerApplicant(){
 
-    }
-
+   }
 }
