@@ -1,12 +1,12 @@
 package com.freddie.marketplace.Controllers;
 
 
-import com.cloudinary.Api;
 import com.freddie.marketplace.DTOS.Requests.CreateAdminAccountRequest;
+import com.freddie.marketplace.DTOS.Requests.LoginAsAdminRequest;
 import com.freddie.marketplace.DTOS.Responses.ApiResponse;
+import com.freddie.marketplace.DTOS.Responses.LoginResponse;
 import com.freddie.marketplace.services.admin.AdminService;
 import com.freddie.marketplace.services.admin.CreateAdminAccountResponse;
-import com.freddie.marketplace.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,14 +20,26 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class AdminController {
 
     @Autowired
-    AdminService service;
+    AdminService adminService;
 
     @PostMapping("create_adminAccount")
     public ResponseEntity<?>  createAccountWith(@RequestBody CreateAdminAccountRequest request){
         try{
-            CreateAdminAccountResponse response = service.createAccount(request);
+            System.out.println(request.toString());
+            CreateAdminAccountResponse response = adminService.createAccount(request);
             return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
         }catch(RuntimeException exception){
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("loginByAdmin")
+    public ResponseEntity<?> login(@RequestBody LoginAsAdminRequest request){
+        try {
+            System.out.println(request.toString());
+            LoginResponse response = adminService.loginAsAdmin(request);
+            return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
+        }catch (RuntimeException exception){
             return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
         }
     }

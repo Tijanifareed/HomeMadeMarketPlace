@@ -50,9 +50,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private SellerRepository sellerRepository;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-    @Autowired
+     @Autowired
     private  UserRepository userRepository;
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
 
     @Autowired
      AuthenticationManager authmanager;
