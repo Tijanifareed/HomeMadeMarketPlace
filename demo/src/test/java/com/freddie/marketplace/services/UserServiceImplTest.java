@@ -170,19 +170,21 @@ class UserServiceImplTest {
 
     }
 
+    @Test
+    public void testThatUserCanApplyToBeASeller() throws IOException {
+        CreateAccountRequest request = createUser();
+        CreateAccountResponse response = userService.createNewUser(request);
+        SellerApplicationRequest request1 = applicationRequest();
+        SellerApplicationResponse response1 = userService.applyToBeASellerWith(request1);
+        assertThat(response1).isNotNull();
+    }
 
-//    @Test
-//    public void testThatWhenAUserApplyToBeASellerItsOnPendingByDefault(){
-//        CreateAccountRequest request1 = createUser2();
-//        CreateAccountResponse response = userService.createNewUser(request1);
-//        SellerApplicationRequest request = new SellerApplicationRequest();
-//        request.setUserId(response.getUserId());
-//        request.setBvn("hhdue887ye78777d8nd8en88");
-//        request.setNin("77e8e7e7774747h7r7r648jj8eje8eey8");
-//        request.setPortfolio("etette6e67e77hd77de7h");
-//        request.setIdCardUrl("eycbn xaxdf ch dz");
-//        SellerApplicationResponse response1 = userService.applyToBeASellerWith(request);
-//        assertThat(response1.getMessage()).isEqualTo("Your application has been received and is going under review an email will be sent to you to know your status");
-//    }
+
+    public SellerApplicationRequest applicationRequest(){
+        SellerApplicationRequest request = new  SellerApplicationRequest();
+        request.setNin("27738383737373633663");
+        request.setBvn("777282928900990999999");
+        return request;
+    }
 
 }

@@ -2,8 +2,10 @@ package com.freddie.marketplace.Controllers;
 
 
 import com.freddie.marketplace.DTOS.Requests.CreateAdminAccountRequest;
+import com.freddie.marketplace.DTOS.Requests.GetApplicantrequest;
 import com.freddie.marketplace.DTOS.Requests.LoginAsAdminRequest;
 import com.freddie.marketplace.DTOS.Responses.ApiResponse;
+import com.freddie.marketplace.DTOS.Responses.GetApplicantresponse;
 import com.freddie.marketplace.DTOS.Responses.LoginResponse;
 import com.freddie.marketplace.services.admin.AdminService;
 import com.freddie.marketplace.services.admin.CreateAdminAccountResponse;
@@ -40,6 +42,16 @@ public class AdminController {
             LoginResponse response = adminService.loginAsAdmin(request);
             return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
         }catch (RuntimeException exception){
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
+        }
+    }
+    @PostMapping("getAllPendingSellers")
+    public ResponseEntity<?> getAllPendingSellers(@RequestBody GetApplicantrequest getApplicantrequest){
+        try{
+            System.out.print(getApplicantrequest);
+            GetApplicantresponse getApplicantresponse = adminService.sellerApplicants(getApplicantrequest);
+            return new ResponseEntity<>(new ApiResponse(true, getApplicantresponse), CREATED);
+        }catch(RuntimeException exception){
             return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
         }
     }

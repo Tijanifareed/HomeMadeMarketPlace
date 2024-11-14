@@ -1,31 +1,33 @@
 package com.freddie.marketplace.services.admin;
 
 import com.freddie.marketplace.DTOS.Requests.CreateAdminAccountRequest;
+import com.freddie.marketplace.DTOS.Requests.GetApplicantrequest;
 import com.freddie.marketplace.DTOS.Requests.LoginAsAdminRequest;
+import com.freddie.marketplace.DTOS.Responses.GetApplicantresponse;
 import com.freddie.marketplace.DTOS.Responses.LoginResponse;
 import com.freddie.marketplace.Exceptions.UserNotFoundException;
 import com.freddie.marketplace.data.model.Admin;
 import com.freddie.marketplace.data.model.ApplicationStatus;
 import com.freddie.marketplace.data.model.Seller;
-import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.repositories.AdminRepository;
 import com.freddie.marketplace.data.repositories.SellerRepository;
 import com.freddie.marketplace.services.jwt.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdminServiceImpl implements AdminService{
 
     @Autowired
     SellerRepository sellerRepository;
+
+    @Autowired
     AdminRepository adminRepository;
     @Autowired
     AuthenticationManager authmanager;
@@ -48,16 +50,24 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public List<Seller> sellerApplicants() {
+    public GetApplicantresponse sellerApplicants(GetApplicantrequest request) {
+//        validateApplicationOfAdmin(request.getAdminId());
+        GetApplicantresponse getApplicantresponse = new  GetApplicantresponse();
         List<Seller> sellerApplicant = sellerRepository.findAll();
         List<Seller> pendingSellers = new ArrayList<Seller>();
         for(Seller seller : sellerApplicant){
             if(seller.getStatus() == ApplicationStatus.PENDING){
                 pendingSellers.add(seller);
+                getApplicantresponse.setSellerList(pendingSellers);
             }
         }
 
-        return pendingSellers;
+        return getApplicantresponse;
+    }
+
+    private void validateApplicationOfAdmin(Long adminId) {
+        Optional<Admin> admin = adminRepository.findById(adminId);
+        if(admin.isEmpty()) throw new UserNotFoundException("Admin does not exists");
     }
 
     @Override
