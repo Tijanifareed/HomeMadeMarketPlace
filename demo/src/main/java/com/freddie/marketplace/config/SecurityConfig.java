@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("register", "loginPage", "create_adminAccount", "loginByAdmin", "getAllPendingSellers")
+                        .requestMatchers("register", "loginPage", "create_adminAccount", "loginByAdmin", "getAllPendingSellers", "getApendingSeller")
                         .permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
