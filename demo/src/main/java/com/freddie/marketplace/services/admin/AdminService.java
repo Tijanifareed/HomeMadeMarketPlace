@@ -14,4 +14,5 @@ public interface AdminService {
     CreateAdminAccountResponse createAccount(CreateAdminAccountRequest request);
     GetApplicantresponse sellerApplicants(GetApplicantrequest request);
     LoginResponse loginAsAdmin(LoginAsAdminRequest request);
+
 }
