@@ -50,7 +50,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public GetApplicantresponse sellerApplicants(GetApplicantrequest request) {
+    public List<Seller> sellerApplicants(GetApplicantrequest request) {
 //        validateApplicationOfAdmin(request.getAdminId());
         GetApplicantresponse getApplicantresponse = new  GetApplicantresponse();
         List<Seller> sellerApplicant = sellerRepository.findAll();
