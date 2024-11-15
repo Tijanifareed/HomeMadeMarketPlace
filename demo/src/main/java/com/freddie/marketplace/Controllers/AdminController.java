@@ -60,8 +60,8 @@ public class AdminController {
         }
     }
 
-    @PostMapping("getApendingSeller")
-    public ResponseEntity<?> getAPendingSeller(@ResponseBody ViewApplicationRequest request){
+    @PostMapping("getAppendingSeller")
+    public ResponseEntity<?> getAPendingSeller(@RequestBody ViewApplicationRequest request){
         try{
             ViewApplicationResponse response = adminService.viewApplication(request);
             return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
