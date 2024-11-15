@@ -1,4 +1,4 @@
 package com.freddie.marketplace.DTOS.Responses;
 
-public class AcceptUserApplicationRespose {
+public class AcceptUserApplicationResponse {
 }

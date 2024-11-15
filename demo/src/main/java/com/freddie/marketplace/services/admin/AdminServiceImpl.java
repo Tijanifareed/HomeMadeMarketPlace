@@ -1,8 +1,10 @@
 package com.freddie.marketplace.services.admin;
 
+import com.freddie.marketplace.DTOS.Requests.AcceptUserApplicationrequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAdminAccountRequest;
 import com.freddie.marketplace.DTOS.Requests.GetApplicantrequest;
 import com.freddie.marketplace.DTOS.Requests.LoginAsAdminRequest;
+import com.freddie.marketplace.DTOS.Responses.AcceptUserApplicationResponse;
 import com.freddie.marketplace.DTOS.Responses.GetApplicantresponse;
 import com.freddie.marketplace.DTOS.Responses.LoginResponse;
 import com.freddie.marketplace.Exceptions.UserNotFoundException;
@@ -81,5 +83,11 @@ public class AdminServiceImpl implements AdminService{
            return  response;
        }
        throw new UserNotFoundException("Bad Credentials");
+    }
+
+    @Override
+    public AcceptUserApplicationResponse acceptuserRequest(AcceptUserApplicationrequest request1) {
+
+        return null;
     }
 }
