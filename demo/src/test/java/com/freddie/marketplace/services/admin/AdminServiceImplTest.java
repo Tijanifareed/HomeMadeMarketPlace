@@ -1,7 +1,9 @@
 package com.freddie.marketplace.services.admin;
 
+import com.freddie.marketplace.DTOS.Requests.AcceptUserApplicationrequest;
 import com.freddie.marketplace.DTOS.Requests.GetApplicantrequest;
 import com.freddie.marketplace.DTOS.Requests.ViewApplicationRequest;
+import com.freddie.marketplace.DTOS.Responses.AcceptUserApplicationResponse;
 import com.freddie.marketplace.DTOS.Responses.GetApplicantresponse;
 
 import com.freddie.marketplace.DTOS.Responses.ViewApplicationResponse;
@@ -40,20 +42,14 @@ class AdminServiceImplTest {
 
    }
 
+   @Test
+    public void testThatAdminCanAcceptASellerApplication(){
+       AcceptUserApplicationrequest request = new AcceptUserApplicationrequest();
+       request.setSellerId(4L);
+       request.setAdminId(2L);
+       AcceptUserApplicationResponse response = adminService.acceptuserRequest(request);
+       assertThat(response.getMessage()).isEqualTo("Success");
+   }
 
-//   @Test
-//    public void testThatAdminCanAcceptTheUSerRequestToBecomeASeller(){
-//       GetApplicantrequest request = new GetApplicantrequest();
-//       request.setAdminId(1L);
-//       GetApplicantresponse response = new GetApplicantresponse();
-//       response.setSellerList(adminService.sellerApplicants(request));
-//       AcceptUserApplicationrequest request1 = new AcceptUserApplicationrequest();
-//       request1.setAdminId(1L);
-//       request1.setSellerId(2L);
-//       AcceptUserApplicationResponse response1 = adminService.acceptuserRequest(request1);
-//
-//
-//
-//
-//   }
+
 }

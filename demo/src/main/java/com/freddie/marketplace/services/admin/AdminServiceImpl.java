@@ -9,10 +9,15 @@ import com.freddie.marketplace.Exceptions.UserNotFoundException;
 import com.freddie.marketplace.data.model.Admin;
 import com.freddie.marketplace.data.model.ApplicationStatus;
 import com.freddie.marketplace.data.model.Seller;
+import com.freddie.marketplace.data.model.User;
 import com.freddie.marketplace.data.repositories.AdminRepository;
 import com.freddie.marketplace.data.repositories.SellerRepository;
+import com.freddie.marketplace.data.repositories.UserRepository;
 import com.freddie.marketplace.services.jwt.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,11 +37,16 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     AuthenticationManager authmanager;
 
+    @Autowired
+    private JavaMailSender mailSender;
+
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
 
     @Autowired
     private JWTService jwtService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public CreateAdminAccountResponse createAccount(CreateAdminAccountRequest request) {
@@ -85,9 +95,54 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public AcceptUserApplicationResponse acceptuserRequest(AcceptUserApplicationrequest request1) {
+        Optional<Seller> seller = sellerRepository.findById(request1.getSellerId());
 
-        return null;
+            Optional<User> user = userRepository.findById(seller.get().getUserId());
+            String email = user.get().getEmail();
+            String name = user.get().getUsername();
+            sendEmail(email, name);
+            seller.get().setStatus(ApplicationStatus.APPROVED);
+            sellerRepository.save(seller.get());
+            AcceptUserApplicationResponse response = new AcceptUserApplicationResponse();
+            response.setMessage("Success");
+            return response;
+
     }
+
+
+    @Value("$(RealMart)")
+    private  String fromEmailId;
+
+    public  void sendEmail(String userEmail, String name){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmailId);
+        message.setTo(userEmail);
+        message.setSubject("RealMart Account Verification");
+        message.setText(String.format("""
+                Hi %s,
+
+                We are thrilled to inform you that your application to become a seller on RealMart has been successfully approved! 🎊
+                                 
+                                 As a verified seller, you now have access to tools and features designed to help you list and manage your products seamlessly. You can start sharing your unique creations and connecting with buyers right away.
+                                 
+                                 To get started:
+                                 
+                        1.         Log in to your account on RealMart.
+                        2.         Access your Seller Dashboard to add your first product.
+                        3.       Explore the Seller Resources section for tips on maximizing your success on RealMart.
+                               If you have any questions or need support, our team is here to assist you every step of the way.
+                                 
+                                 Welcome to the RealMart Seller Community! We look forward to seeing your business thrive.
+                                 
+                                 Warm regards,
+                                 The RealMart Team
+                """,name));
+        mailSender.send(message);
+
+    }
+
+
+
 
     @Override
     public ViewApplicationResponse viewApplication(ViewApplicationRequest request1) {
