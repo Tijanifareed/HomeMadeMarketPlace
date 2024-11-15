@@ -1,12 +1,10 @@
 package com.freddie.marketplace.services.admin;
 
-import com.freddie.marketplace.DTOS.Requests.AcceptUserApplicationrequest;
-import com.freddie.marketplace.DTOS.Requests.CreateAdminAccountRequest;
-import com.freddie.marketplace.DTOS.Requests.GetApplicantrequest;
-import com.freddie.marketplace.DTOS.Requests.LoginAsAdminRequest;
+import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.AcceptUserApplicationResponse;
 import com.freddie.marketplace.DTOS.Responses.GetApplicantresponse;
 import com.freddie.marketplace.DTOS.Responses.LoginResponse;
+import com.freddie.marketplace.DTOS.Responses.ViewApplicationResponse;
 import com.freddie.marketplace.Exceptions.UserNotFoundException;
 import com.freddie.marketplace.data.model.Admin;
 import com.freddie.marketplace.data.model.ApplicationStatus;
@@ -52,7 +50,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public List<Seller> sellerApplicants(GetApplicantrequest request) {
+    public GetApplicantresponse sellerApplicants(GetApplicantrequest request) {
 //        validateApplicationOfAdmin(request.getAdminId());
         GetApplicantresponse getApplicantresponse = new  GetApplicantresponse();
         List<Seller> sellerApplicant = sellerRepository.findAll();
@@ -89,5 +87,17 @@ public class AdminServiceImpl implements AdminService{
     public AcceptUserApplicationResponse acceptuserRequest(AcceptUserApplicationrequest request1) {
 
         return null;
+    }
+
+    @Override
+    public ViewApplicationResponse viewApplication(ViewApplicationRequest request1) {
+        Optional<Seller> seller = sellerRepository.findById(request1.getSellerId());
+        if(seller.isPresent()) {
+            ViewApplicationResponse response = new ViewApplicationResponse();
+            response.setSeller(seller.get());
+            return response;
+        }
+        throw new UserNotFoundException("Seller not found");
+
     }
 }
