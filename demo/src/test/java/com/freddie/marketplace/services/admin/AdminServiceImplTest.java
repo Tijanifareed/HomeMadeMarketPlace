@@ -45,7 +45,7 @@ class AdminServiceImplTest {
    @Test
     public void testThatAdminCanAcceptASellerApplication(){
        AcceptUserApplicationrequest request = new AcceptUserApplicationrequest();
-       request.setSellerId(4L);
+       request.setSellerId(6L);
        request.setAdminId(2L);
        AcceptUserApplicationResponse response = adminService.acceptuserRequest(request);
        assertThat(response.getMessage()).isEqualTo("Success");

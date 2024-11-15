@@ -1,14 +1,9 @@
 package com.freddie.marketplace.Controllers;
 
 
-import com.freddie.marketplace.DTOS.Requests.CreateAdminAccountRequest;
-import com.freddie.marketplace.DTOS.Requests.GetApplicantrequest;
-import com.freddie.marketplace.DTOS.Requests.LoginAsAdminRequest;
-import com.freddie.marketplace.DTOS.Requests.ViewApplicationRequest;
-import com.freddie.marketplace.DTOS.Responses.ApiResponse;
-import com.freddie.marketplace.DTOS.Responses.GetApplicantresponse;
-import com.freddie.marketplace.DTOS.Responses.LoginResponse;
-import com.freddie.marketplace.DTOS.Responses.ViewApplicationResponse;
+import com.cloudinary.Api;
+import com.freddie.marketplace.DTOS.Requests.*;
+import com.freddie.marketplace.DTOS.Responses.*;
 import com.freddie.marketplace.services.admin.AdminService;
 import com.freddie.marketplace.services.admin.CreateAdminAccountResponse;
 import org.apache.http.protocol.ResponseServer;
@@ -67,6 +62,16 @@ public class AdminController {
             return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
         }catch(RuntimeException exception){
             return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("approveRequest")
+    public ResponseEntity<?>  approveApplication(@RequestBody AcceptUserApplicationrequest request){
+        try{
+            AcceptUserApplicationResponse response = adminService.acceptuserRequest(request);
+            return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
+        }catch(RuntimeException exception){
+        return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
         }
     }
 }
