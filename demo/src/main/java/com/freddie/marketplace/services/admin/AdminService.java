@@ -17,5 +17,5 @@ public interface AdminService {
 
     DeclineUserApplicationResponse declineUserRequest(DeclineUserApplicationRequest request);
 
-    DisplayApprovedProductResponse acceptProductRequest(AcceptSellerProductRequest request);
+    AcceptSellerProductResponse acceptProductRequest(AcceptSellerProductRequest request);
 }

@@ -1,9 +1,6 @@
 package com.freddie.marketplace.services.admin;
 
-import com.freddie.marketplace.DTOS.Requests.AcceptUserApplicationrequest;
-import com.freddie.marketplace.DTOS.Requests.DeclineUserApplicationRequest;
-import com.freddie.marketplace.DTOS.Requests.GetApplicantrequest;
-import com.freddie.marketplace.DTOS.Requests.ViewApplicationRequest;
+import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.*;
 
 import org.junit.jupiter.api.Test;
@@ -61,7 +58,10 @@ class AdminServiceImplTest {
 
    @Test
     public void testThatAdminCanAcceptAProduct(){
-       DisplayApprovedProductResponse response = adminService.acceptProductRequest();
+       AcceptSellerProductRequest request = new AcceptSellerProductRequest();
+       request.setAdminId(1L);
+       request.setProductId(1L);
+       AcceptSellerProductResponse response = adminService.acceptProductRequest(request);
        assertThat(response).isNotNull();
    }
 

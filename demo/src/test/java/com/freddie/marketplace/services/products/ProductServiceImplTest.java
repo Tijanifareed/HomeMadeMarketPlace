@@ -17,6 +17,6 @@ public class ProductServiceImplTest {
     @Test
     public void testThatOnlyProductThatHasBeenApprovedIsDisplayed(){
         DisplayApprovedProductResponse response = productService.displayApprovedproduct();
-        assertThat(response).isNotNull();
+        assertThat(response.getProduct().size()).isEqualTo(2);
     }
 }

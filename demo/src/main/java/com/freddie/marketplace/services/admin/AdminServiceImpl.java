@@ -3,11 +3,9 @@ package com.freddie.marketplace.services.admin;
 import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.*;
 import com.freddie.marketplace.Exceptions.UserNotFoundException;
-import com.freddie.marketplace.data.model.Admin;
-import com.freddie.marketplace.data.model.ApplicationStatus;
-import com.freddie.marketplace.data.model.Seller;
-import com.freddie.marketplace.data.model.User;
+import com.freddie.marketplace.data.model.*;
 import com.freddie.marketplace.data.repositories.AdminRepository;
+import com.freddie.marketplace.data.repositories.ProductRepository;
 import com.freddie.marketplace.data.repositories.SellerRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;
 import com.freddie.marketplace.services.jwt.JWTService;
@@ -44,6 +42,8 @@ public class AdminServiceImpl implements AdminService{
     private JWTService jwtService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public CreateAdminAccountResponse createAccount(CreateAdminAccountRequest request) {
@@ -164,9 +164,13 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public DisplayApprovedProductResponse acceptProductRequest(AcceptSellerProductRequest request) {
-
-        return null;
+    public AcceptSellerProductResponse acceptProductRequest(AcceptSellerProductRequest request) {
+        Optional<Product> products = productRepository.findById(request.getProductId());
+        products.get().setStatus(ProductStatus.SUCCESSFUL);
+        productRepository.save(products.get());
+        AcceptSellerProductResponse response = new  AcceptSellerProductResponse();
+        response.setMessage("Success");
+        return response;
     }
 
     public  void sendDeclineEmail(String userEmail, String name){
