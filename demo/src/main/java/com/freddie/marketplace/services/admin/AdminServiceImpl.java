@@ -164,7 +164,8 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public DisplayApprovedProductResponse acceptProductRequest() {
+    public DisplayApprovedProductResponse acceptProductRequest(AcceptSellerProductRequest request) {
+
         return null;
     }
 
