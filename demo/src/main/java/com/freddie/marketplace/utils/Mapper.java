@@ -35,6 +35,7 @@ public class Mapper {
         product.setCategory(request.getProductType());
         product.setStock(request.getStock());
         product.setStatus(ProductStatus.PENDING);
+
         return product;
     }
 

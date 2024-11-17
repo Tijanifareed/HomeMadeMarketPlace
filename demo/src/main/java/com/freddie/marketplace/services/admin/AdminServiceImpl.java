@@ -1,10 +1,7 @@
 package com.freddie.marketplace.services.admin;
 
 import com.freddie.marketplace.DTOS.Requests.*;
-import com.freddie.marketplace.DTOS.Responses.AcceptUserApplicationResponse;
-import com.freddie.marketplace.DTOS.Responses.GetApplicantresponse;
-import com.freddie.marketplace.DTOS.Responses.LoginResponse;
-import com.freddie.marketplace.DTOS.Responses.ViewApplicationResponse;
+import com.freddie.marketplace.DTOS.Responses.*;
 import com.freddie.marketplace.Exceptions.UserNotFoundException;
 import com.freddie.marketplace.data.model.Admin;
 import com.freddie.marketplace.data.model.ApplicationStatus;
@@ -122,20 +119,15 @@ public class AdminServiceImpl implements AdminService{
                 Hi %s,
 
                 We are thrilled to inform you that your application to become a seller on RealMart has been successfully approved! 🎊
-                                 
-                                 As a verified seller, you now have access to tools and features designed to help you list and manage your products seamlessly. You can start sharing your unique creations and connecting with buyers right away.
-                                 
-                                 To get started:
-                                 
-                        1.         Log in to your account on RealMart.
-                        2.         Access your Seller Dashboard to add your first product.
-                        3.       Explore the Seller Resources section for tips on maximizing your success on RealMart.
-                               If you have any questions or need support, our team is here to assist you every step of the way.
-                                 
-                                 Welcome to the RealMart Seller Community! We look forward to seeing your business thrive.
-                                 
-                                 Warm regards,
-                                 The RealMart Team
+                As a verified seller, you now have access to tools and features designed to help you list and manage your products seamlessly. You can start sharing your unique creations and connecting with buyers right away.
+                To get started:
+                1. Log in to your account on RealMart.
+                2. Access your Seller Dashboard to add your first product.
+                3.Explore the Seller Resources section for tips on maximizing your success on RealMart.
+                If you have any questions or need support, our team is here to assist you every step of the way.
+                Welcome to the RealMart Seller Community! We look forward to seeing your business thrive.                
+                Warm regards,
+                The RealMart Team
                 """,name));
         mailSender.send(message);
 
@@ -155,4 +147,35 @@ public class AdminServiceImpl implements AdminService{
         throw new UserNotFoundException("Seller not found");
 
     }
+
+    @Override
+    public DeclineUserApplicationResponse declineUserRequest(DeclineUserApplicationRequest request) {
+        Optional<Seller> seller = sellerRepository.findById(request.getSellerId());
+
+        Optional<User> user = userRepository.findById(seller.get().getUserId());
+        String email = user.get().getEmail();
+        String name = user.get().getUsername();
+//        sendDeclineEmail(email, name);
+        seller.get().setStatus(ApplicationStatus.DISAPPROVED);
+        sellerRepository.save(seller.get());
+        DeclineUserApplicationResponse response = new DeclineUserApplicationResponse();
+        response.setMessage("Success");
+        return response;
+    }
+
+    public  void sendDeclineEmail(String userEmail, String name){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmailId);
+        message.setTo(userEmail);
+        message.setSubject("RealMart Account Verification");
+        message.setText(String.format("""
+                Hi %s,
+                
+                Warm regards,
+                The RealMart Team
+                """,name));
+        mailSender.send(message);
+
+    }
+
 }

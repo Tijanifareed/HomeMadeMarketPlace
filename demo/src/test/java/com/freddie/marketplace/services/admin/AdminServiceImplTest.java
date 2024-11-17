@@ -1,9 +1,11 @@
 package com.freddie.marketplace.services.admin;
 
 import com.freddie.marketplace.DTOS.Requests.AcceptUserApplicationrequest;
+import com.freddie.marketplace.DTOS.Requests.DeclineUserApplicationRequest;
 import com.freddie.marketplace.DTOS.Requests.GetApplicantrequest;
 import com.freddie.marketplace.DTOS.Requests.ViewApplicationRequest;
 import com.freddie.marketplace.DTOS.Responses.AcceptUserApplicationResponse;
+import com.freddie.marketplace.DTOS.Responses.DeclineUserApplicationResponse;
 import com.freddie.marketplace.DTOS.Responses.GetApplicantresponse;
 
 import com.freddie.marketplace.DTOS.Responses.ViewApplicationResponse;
@@ -49,6 +51,15 @@ class AdminServiceImplTest {
        request.setAdminId(2L);
        AcceptUserApplicationResponse response = adminService.acceptuserRequest(request);
        assertThat(response.getMessage()).isEqualTo("Success");
+   }
+
+   @Test
+    public void testThatAdminCanDeclineASellerApplication(){
+       DeclineUserApplicationRequest request = new DeclineUserApplicationRequest();
+       request.setAdminId(1L);
+       request.setSellerId(5L);
+       DeclineUserApplicationResponse response = adminService.declineUserRequest(request);
+       assertThat(response).isNotNull();
    }
 
 

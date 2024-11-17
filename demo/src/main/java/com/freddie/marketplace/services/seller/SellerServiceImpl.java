@@ -46,6 +46,7 @@ public class SellerServiceImpl implements SellerService {
 
         @Override
         public AddProductResponse addProduct(AddProductRequest request1) throws IOException {
+            System.out.println(request1.toString());
             validateRequestForProduct(request1);
             checkThatSellerExists(request1.getSeller_id());
             validateThatOnlySellerCanAddProduct(request1.getSeller_id());
@@ -56,19 +57,16 @@ public class SellerServiceImpl implements SellerService {
             productRepository.save(product);
             System.out.println("Product ID: " + product.getId());
 
-            // Initialize a list to hold image URLs
+
             List<String> imageUrls = new ArrayList<>();
 
-            // Upload each file and add the URL to the list
-            for (MultipartFile file : request1.getFile()) { // Assuming `files` is the field with multiple images
+            for (MultipartFile file : request1.getFile()) {
                 String imageUrl = imageService.uploadImage(file);
                 imageUrls.add(imageUrl);
             }
 
-            // Add the list of image URLs to the product's images
             updateProductPicture(product.getId(), imageUrls);
 
-            // Create the response with a confirmation message
             AddProductResponse response = new AddProductResponse();
             response.setMessage("""
         Your product is going through confirmation.
