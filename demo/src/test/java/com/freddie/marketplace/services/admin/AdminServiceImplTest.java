@@ -4,11 +4,8 @@ import com.freddie.marketplace.DTOS.Requests.AcceptUserApplicationrequest;
 import com.freddie.marketplace.DTOS.Requests.DeclineUserApplicationRequest;
 import com.freddie.marketplace.DTOS.Requests.GetApplicantrequest;
 import com.freddie.marketplace.DTOS.Requests.ViewApplicationRequest;
-import com.freddie.marketplace.DTOS.Responses.AcceptUserApplicationResponse;
-import com.freddie.marketplace.DTOS.Responses.DeclineUserApplicationResponse;
-import com.freddie.marketplace.DTOS.Responses.GetApplicantresponse;
+import com.freddie.marketplace.DTOS.Responses.*;
 
-import com.freddie.marketplace.DTOS.Responses.ViewApplicationResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,5 +59,10 @@ class AdminServiceImplTest {
        assertThat(response).isNotNull();
    }
 
+   @Test
+    public void testThatAdminCanAcceptAProduct(){
+       DisplayApprovedProductResponse response = adminService.acceptProductRequest();
+       assertThat(response).isNotNull();
+   }
 
 }

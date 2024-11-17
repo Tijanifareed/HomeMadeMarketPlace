@@ -163,6 +163,11 @@ public class AdminServiceImpl implements AdminService{
         return response;
     }
 
+    @Override
+    public DisplayApprovedProductResponse acceptProductRequest() {
+        return null;
+    }
+
     public  void sendDeclineEmail(String userEmail, String name){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmailId);
