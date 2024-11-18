@@ -158,6 +158,7 @@ public class AdminServiceImpl implements AdminService{
 //        sendDeclineEmail(email, name);
         seller.get().setStatus(ApplicationStatus.DISAPPROVED);
         sellerRepository.save(seller.get());
+        sellerRepository.delete(seller.get());
         DeclineUserApplicationResponse response = new DeclineUserApplicationResponse();
         response.setMessage("Success");
         return response;

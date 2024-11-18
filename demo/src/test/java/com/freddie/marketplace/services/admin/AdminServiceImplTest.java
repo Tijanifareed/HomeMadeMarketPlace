@@ -65,4 +65,9 @@ class AdminServiceImplTest {
        assertThat(response).isNotNull();
    }
 
+   @Test
+    public void testThatAdminCanDeclineAProduct(){
+
+   }
+
 }
