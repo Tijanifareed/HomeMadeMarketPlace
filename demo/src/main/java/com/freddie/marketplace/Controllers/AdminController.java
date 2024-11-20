@@ -1,27 +1,27 @@
 package com.freddie.marketplace.Controllers;
 
 
-import com.cloudinary.Api;
 import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.*;
 import com.freddie.marketplace.services.admin.AdminService;
-import com.freddie.marketplace.services.admin.CreateAdminAccountResponse;
-import org.apache.http.protocol.ResponseServer;
+import com.freddie.marketplace.DTOS.Responses.CreateAdminAccountResponse;
+import com.freddie.marketplace.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class AdminController {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    UserService userService;
 
     @PostMapping("create_adminAccount")
     public ResponseEntity<?>  createAccountWith(@RequestBody CreateAdminAccountRequest request){
@@ -34,16 +34,16 @@ public class AdminController {
         }
     }
 
-    @PostMapping("loginByAdmin")
-    public ResponseEntity<?> login(@RequestBody LoginAsAdminRequest request){
-        try {
-            System.out.println(request.toString());
-            LoginResponse response = adminService.loginAsAdmin(request);
-            return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
-        }catch (RuntimeException exception){
-            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
-        }
-    }
+//    @PostMapping("loginByAdmin")
+//    public ResponseEntity<?> login(@RequestBody LoginRequest request){
+//        try {
+//            System.out.println(request.toString());
+//            LoginResponse response = userService.verifyUserWith(request);
+//            return new ResponseEntity<>(new ApiResponse(true, response), CREATED);
+//        }catch (RuntimeException exception){
+//            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
+//        }
+//    }
     @PostMapping("getAllPendingSellers")
     public ResponseEntity<?> getAllPendingSellers(@RequestBody GetApplicantrequest getApplicantrequest){
         try{

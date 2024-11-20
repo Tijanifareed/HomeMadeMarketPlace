@@ -2,9 +2,6 @@ package com.freddie.marketplace.services.admin;
 
 import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.*;
-import com.freddie.marketplace.data.model.Seller;
-
-import java.util.List;
 
 public interface AdminService {
     CreateAdminAccountResponse createAccount(CreateAdminAccountRequest request);

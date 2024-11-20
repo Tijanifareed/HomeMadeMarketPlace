@@ -1,4 +1,4 @@
-package com.freddie.marketplace.services.admin;
+package com.freddie.marketplace.DTOS.Responses;
 
 
 import lombok.Getter;

@@ -3,6 +3,7 @@ package com.freddie.marketplace.services.admin;
 import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.*;
 import com.freddie.marketplace.Exceptions.UserNotFoundException;
+import com.freddie.marketplace.Exceptions.UsernameAlreadyExistsException;
 import com.freddie.marketplace.data.model.*;
 import com.freddie.marketplace.data.repositories.AdminRepository;
 import com.freddie.marketplace.data.repositories.ProductRepository;
@@ -40,20 +41,29 @@ public class AdminServiceImpl implements AdminService{
 
     @Autowired
     private JWTService jwtService;
+
     @Autowired
     private UserRepository userRepository;
-    @Autowired
     private ProductRepository productRepository;
 
     @Override
     public CreateAdminAccountResponse createAccount(CreateAdminAccountRequest request) {
-        Admin admin = new Admin();
-        admin.setUsername(request.getUserName());
-        admin.setPassword(encoder.encode(request.getPassword()));
-        adminRepository.save(admin);
+//        verifyCreateAccountRequest(request);
+        User user = new User();
+        user.setUsername(request.getUserName());
+        user.setPassword(encoder.encode(request.getPassword()));
+        user.setRole(UserRole.ADMIN);
+        userRepository.save(user);
         CreateAdminAccountResponse response = new CreateAdminAccountResponse();
         response.setMessage("Account created successfully");
         return response;
+    }
+
+    private void verifyCreateAccountRequest(CreateAdminAccountRequest request) {
+        User user = userRepository.findByUsername(request.getUserName());
+        if(user.getUsername().equals(request.getUserName())){
+            throw new UsernameAlreadyExistsException("This user name already exists");
+        }
     }
 
     @Override

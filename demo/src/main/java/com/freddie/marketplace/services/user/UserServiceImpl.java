@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+
     private boolean userNameExists(String userName) {
         return userRepository.existsByUsername(userName);
     }
@@ -110,6 +111,7 @@ public class UserServiceImpl implements UserService {
             String token = jwtService.generateToken(request.getUsername(), user.getId());
             response.setToken(token);
             response.setUserName(userName);
+            response.setRole(user.getRole().toString());
             return response;
         }
         LoginResponse response = new LoginResponse();

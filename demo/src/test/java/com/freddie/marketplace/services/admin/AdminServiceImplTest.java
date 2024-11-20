@@ -70,4 +70,12 @@ class AdminServiceImplTest {
 
    }
 
+   @Test
+    public void testThatAdminCanCreateAccount(){
+       CreateAdminAccountRequest request = new CreateAdminAccountRequest();
+       request.setUserName("freddie");
+       request.setPassword("olamide");
+       CreateAdminAccountResponse response = adminService.createAccount(request);
+   }
+
 }
