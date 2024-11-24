@@ -4,4 +4,10 @@ services:
     ports:
       - "8081:8080"
     restart: always
+    environment:
+      - DATABASE_URL=jdbc:postgresql://dpg-ct1g001u0jms73cf5slg-a.oregon-postgres.render.com:5432/realmart_1f8o
+      - DB_USERNAME=realmart
+      - DB_PASSWORD=kKnM7n7UlcbxnS728Vorf8pC5qCc88zI
+
+
 
