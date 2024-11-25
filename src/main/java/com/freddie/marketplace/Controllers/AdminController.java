@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+@CrossOrigin(origins = {"http://localhost:3000", "https://real-mart-by-freddie.vercel.app"})
 public class AdminController {
 
     @Autowired

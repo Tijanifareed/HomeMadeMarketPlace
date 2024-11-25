@@ -68,7 +68,8 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:3000");  // Replace with your frontend origin
+        configuration.addAllowedOrigin("https://real-mart-by-freddie.vercel.app");  // Replace with your frontend origin
+        configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedMethod("*");  // Allow all HTTP methods
         configuration.addAllowedHeader("*");  // Allow all headers
         configuration.setAllowCredentials(true);  // Enable if using cookies
@@ -77,5 +78,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+//     configuration.addAllowedOrigin("http://localhost:3000");
 
 }
