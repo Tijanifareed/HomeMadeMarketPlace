@@ -1,6 +1,7 @@
 package com.freddie.marketplace.data.model;
 
 
+import com.freddie.marketplace.data.model.modelEnums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +21,6 @@ public class AppUser {
     @Enumerated(EnumType.STRING)
     private UserRole role;
     private String profilePicture;
-    private String bio;
 
 }
 

@@ -4,7 +4,7 @@ package com.freddie.marketplace.services.products;
 import com.freddie.marketplace.DTOS.Responses.DisplayApprovedProductResponse;
 import com.freddie.marketplace.Exceptions.ThereAreNoProductsException;
 import com.freddie.marketplace.data.model.Product;
-import com.freddie.marketplace.data.model.ProductStatus;
+import com.freddie.marketplace.data.model.modelEnums.ProductStatus;
 import com.freddie.marketplace.data.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 

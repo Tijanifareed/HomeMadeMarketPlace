@@ -1,6 +1,7 @@
 package com.freddie.marketplace.data.model;
 
 
+import com.freddie.marketplace.data.model.modelEnums.ApplicationStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

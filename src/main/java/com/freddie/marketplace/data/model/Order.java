@@ -1,9 +1,9 @@
 package com.freddie.marketplace.data.model;
 
+import com.freddie.marketplace.data.model.modelEnums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "\"order\"")
@@ -18,8 +18,8 @@ public class Order {
     private Long orderItems;  // List of items in the order
 
     private Double totalAmount;  // Total cost of the order
-
-    private String status;  // Order status: e.g., 'Pending', 'Shipped', 'Delivered'
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;  // Order status: e.g., 'Pending', 'Shipped', 'Delivered'
 
     private LocalDateTime orderDate;  // Date the order was placed
 }

@@ -3,11 +3,10 @@ package com.freddie.marketplace.services.seller;
 import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.Exceptions.NotASellerException;
-import com.freddie.marketplace.data.model.CategoryType;
+import com.freddie.marketplace.data.model.modelEnums.CategoryType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,5 +1,7 @@
 package com.freddie.marketplace.data.model;
 
+import com.freddie.marketplace.data.model.modelEnums.CategoryType;
+import com.freddie.marketplace.data.model.modelEnums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

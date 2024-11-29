@@ -1,6 +1,5 @@
 package com.freddie.marketplace.DTOS.Responses;
 
-import com.freddie.marketplace.data.model.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -4,6 +4,9 @@ import com.freddie.marketplace.DTOS.Requests.AddProductRequest;
 import com.freddie.marketplace.DTOS.Requests.CreateAccountRequest;
 import com.freddie.marketplace.DTOS.Requests.SellerApplicationRequest;
 import com.freddie.marketplace.data.model.*;
+import com.freddie.marketplace.data.model.modelEnums.ApplicationStatus;
+import com.freddie.marketplace.data.model.modelEnums.ProductStatus;
+import com.freddie.marketplace.data.model.modelEnums.UserRole;
 import org.springframework.stereotype.Component;
 
 

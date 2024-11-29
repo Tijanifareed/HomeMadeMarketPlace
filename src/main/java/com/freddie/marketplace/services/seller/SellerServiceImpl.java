@@ -5,6 +5,8 @@ import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.Exceptions.NotASellerException;
 import com.freddie.marketplace.Exceptions.UserNotFoundException;
 import com.freddie.marketplace.data.model.*;
+import com.freddie.marketplace.data.model.modelEnums.ApplicationStatus;
+import com.freddie.marketplace.data.model.modelEnums.UserRole;
 import com.freddie.marketplace.data.repositories.ProductRepository;
 import com.freddie.marketplace.data.repositories.SellerRepository;
 import com.freddie.marketplace.data.repositories.UserRepository;

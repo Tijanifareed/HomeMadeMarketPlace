@@ -1,6 +1,6 @@
 package com.freddie.marketplace.DTOS.Requests;
 
-import com.freddie.marketplace.data.model.CategoryType;
+import com.freddie.marketplace.data.model.modelEnums.CategoryType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -1,4 +1,4 @@
-package com.freddie.marketplace.data.model;
+package com.freddie.marketplace.data.model.modelEnums;
 
 public enum ApplicationStatus {
     APPROVED,
