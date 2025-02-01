@@ -31,8 +31,8 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     SellerRepository sellerRepository;
 
-    @Autowired
-    AdminRepository adminRepository;
+
+
     @Autowired
     AuthenticationManager authmanager;
 
@@ -47,11 +47,13 @@ public class AdminServiceImpl implements AdminService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
     @Override
     public CreateAdminAccountResponse createAccount(CreateAdminAccountRequest request) {
-//        verifyCreateAccountRequest(request);
+        verifyCreateAccountRequest(request);
         AppUser appUser = new AppUser();
         appUser.setUsername(request.getUserName());
         appUser.setPassword(encoder.encode(request.getPassword()));
@@ -63,10 +65,13 @@ public class AdminServiceImpl implements AdminService{
     }
 
     private void verifyCreateAccountRequest(CreateAdminAccountRequest request) {
-        AppUser appUser = userRepository.findByUsername(request.getUserName());
-        if(appUser.getUsername().equals(request.getUserName())){
-            throw new UsernameAlreadyExistsException("This user name already exists");
+        List<AppUser> appUsers = userRepository.findAll();
+        for(AppUser user : appUsers){
+            if(request.getUserName().equals(user.getUsername())){
+                throw new UsernameAlreadyExistsException("User name already exists");
+            }
         }
+
     }
 
     @Override
@@ -90,18 +95,7 @@ public class AdminServiceImpl implements AdminService{
         if(admin.isEmpty() || admin.get().getRole() != UserRole.ADMIN) throw new UserNotFoundException("Admin does not exists");
     }
 
-    @Override
-    public LoginResponse loginAsAdmin(LoginAsAdminRequest request) {
-        LoginResponse response = new LoginResponse();
-        Admin admin = adminRepository.findByUsername(request.getUserName());
-        if(admin == null) throw new UserNotFoundException("Admin account not found");
-       if(admin.getUsername().equals(request.getUserName()) && encoder.matches(request.getPassword(), admin.getPassword())){
-           response.setMessage("Login Successfully");
-           response.setUserName(request.getUserName());
-           return  response;
-       }
-       throw new UserNotFoundException("Bad Credentials");
-    }
+
 
     @Override
     public AcceptUserApplicationResponse acceptuserRequest(AcceptUserApplicationrequest request1) {

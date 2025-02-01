@@ -3,6 +3,11 @@ package com.freddie.marketplace.services.admin;
 import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.*;
 
+import com.freddie.marketplace.data.model.Admin;
+import com.freddie.marketplace.data.model.AppUser;
+import com.freddie.marketplace.data.repositories.AdminRepository;
+import com.freddie.marketplace.data.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,19 +15,41 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
+
+
 class AdminServiceImplTest {
 
     @Autowired
     AdminService adminService;
 
-   @Test
+    @Autowired
+    AdminRepository adminRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    public void setup(){
+        userRepository.deleteAll();
+
+    }
+
+    @Test
     public void testThatAdminCanGetSellerApplicant(){
-       GetApplicantrequest request = new GetApplicantrequest();
-       request.setAdminId(1L);
-       GetApplicantresponse response = adminService.sellerApplicants(request);
+       CreateAdminAccountRequest request = new CreateAdminAccountRequest();
+       request.setUserName("freddie");
+       request.setPassword("olamide");
+        System.out.println(request.toString());
+       CreateAdminAccountResponse response = adminService.createAccount(request);
+        System.out.println(request.toString());
+       AppUser user = userRepository.findByUsername(request.getUserName());
+
+       GetApplicantrequest request1 = new GetApplicantrequest();
+       request1.setAdminId(user.getId());
+       GetApplicantresponse response1 = adminService.sellerApplicants(request1);
         assertThat(response).isNotNull();
-       System.out.println(response.toString());
-        assertThat(response.getSellerList().size()).isEqualTo(3);
+       System.out.println(response1.toString());
+        assertThat(response1.getSellerList().size()).isEqualTo(2);
    }
 
 
@@ -76,6 +103,9 @@ class AdminServiceImplTest {
        request.setUserName("freddie");
        request.setPassword("olamide");
        CreateAdminAccountResponse response = adminService.createAccount(request);
+
    }
+
+
 
 }

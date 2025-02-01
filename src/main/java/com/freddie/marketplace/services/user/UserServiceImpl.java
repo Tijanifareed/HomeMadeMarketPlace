@@ -76,7 +76,6 @@ public class UserServiceImpl implements UserService {
         request.setPassword(encoder.encode(request.getPassword()));
         if(userExistsByPhoneNumberOrEmail(email, phoneNumber)) throw new EmailOrPhoneNumberExistsException("Email or PhoneNumber has already been used");
         else if(userNameExists(userName)) throw new UsernameAlreadyExistsException("This User "+userName+" has already been used Try another one");
-//        System.out.println(userRepository.existsByEmail(email));
         AppUser appUser = createUserMapper(request);
         userRepository.save(appUser);
         sendEmail(email,userName);
@@ -123,8 +122,7 @@ public class UserServiceImpl implements UserService {
         Seller seller = mapSeller(request);
         sellerRepository.save(seller);
         String idCardUrl = imageService.uploadImage(request.getIdCardUrl());
-        String portfolio = imageService.uploadImage(request.getPortfolio());
-        updateSellerRequirements(seller.getId(), idCardUrl, portfolio);
+        updateSellerRequirements(seller.getId(), idCardUrl);
 
         SellerApplicationResponse response = new SellerApplicationResponse();
         response.setMessage("Your application has been received and is going under review an email will be sent to you to know if you are accepted or not");
@@ -136,18 +134,15 @@ public class UserServiceImpl implements UserService {
         for(Seller seller: sellers){
             if (request.getUserId().equals(seller.getUserId())){
                 throw new UserCanNotApplyTwiceException("You have already applied try again later");
-            } else if (request.getNin().equals(seller.getNin()) || request.getBvn().equals(seller.getBvn())) {
-                throw new UserCanNotApplyTwiceException("Credentials has already been use by another user try again later");
             }
         }
     }
 
 
-    private void updateSellerRequirements(Long id, String idCardUrl, String portfolio) {
+    private void updateSellerRequirements(Long id, String idCardUrl) {
         Optional<Seller> seller = sellerRepository.findById(id);
         if(seller.isPresent()){
         Seller seller1 = seller.get();
-        seller1.setPortfolio(portfolio);
         seller1.setIdCardUrl(idCardUrl);
         sellerRepository.save(seller1);
 
@@ -205,9 +200,7 @@ public class UserServiceImpl implements UserService {
         response.setPhoneNumber(appUser.getPhoneNumber());
         response.setEmail(appUser.getEmail());
         response.setAddress(appUser.getAdress());
-        response.setRole(String.valueOf(appUser.getRole()));
         response.setProfilePicture(appUser.getProfilePicture());
-        response.setBio(appUser.getBio());
         return response;
     }
 

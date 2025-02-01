@@ -30,11 +30,4 @@ public class MyUserDetailService implements UserDetailsService {
     }
 
 
-//    public UserDetails loadAdminByUsername(String userName) throws UsernameNotFoundException{
-//        Admin admin = adminRepository.findByUsername(userName);
-//        if(admin == null){
-//            throw new UsernameNotFoundException("Admin account does not exists");
-//        }
-//        return new
-//    }
 }

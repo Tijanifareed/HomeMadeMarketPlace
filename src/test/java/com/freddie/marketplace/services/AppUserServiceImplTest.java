@@ -4,6 +4,7 @@ import com.freddie.marketplace.DTOS.Requests.*;
 import com.freddie.marketplace.DTOS.Responses.AddProductResponse;
 import com.freddie.marketplace.DTOS.Responses.CreateAccountResponse;
 import com.freddie.marketplace.DTOS.Responses.GetProfileResponse;
+import com.freddie.marketplace.DTOS.Responses.SellerApplicationResponse;
 import com.freddie.marketplace.Exceptions.*;
 import com.freddie.marketplace.data.model.AppUser;
 import com.freddie.marketplace.data.model.modelEnums.CategoryType;
@@ -52,32 +53,71 @@ class AppUserServiceImplTest {
         assertThat(response.getMessage()).isEqualTo("Account Created Successfully");
 
     }
-
-
-
     @Test
     public void testThatUserWithTHeSameEmailThrowsException(){
         CreateAccountRequest request = createUser();
-        CreateAccountRequest request1 = createUser();
+        request.setUsername("Fareeds");
+        request.setPassword("Olamide");
+        request.setEmail("fareedtijani2810@gmail.com");
+        request.setPhoneNumber("08084562169");
         CreateAccountResponse response = userService.createNewUser(request);
+        CreateAccountRequest request1 = createUser();
+        request1.setUsername("Fareed");
+        request1.setPassword("Olamide");
+        request1.setEmail("fareedtijani2810@gmail.com");
+        request1.setPhoneNumber("08084562160");
         assertThrows(EmailOrPhoneNumberExistsException.class, ()-> userService.createNewUser(request1));
-    }
+        CreateAccountRequest request2 = createUser();
+        request2.setUsername("Fareeda");
+        request2.setPassword("Olamide");
+        request2.setEmail("fareedtijani2810@gmail.com");
+        request2.setPhoneNumber("080845621685");
+        assertThrows(EmailOrPhoneNumberExistsException.class, ()-> userService.createNewUser(request2));
 
+    }
     @Test
     public void testThatUserHasAUniqueNumber(){
         CreateAccountRequest request = createUser();
-        CreateAccountRequest request1 = createUser();
+        request.setUsername("Fareeds");
+        request.setPassword("Olamide");
+        request.setEmail("fareedtijani2810@gmail.coms");
+        request.setPhoneNumber("08084562163");
         CreateAccountResponse response = userService.createNewUser(request);
+        CreateAccountRequest request1 = createUser();
+        request1.setUsername("Fareed");
+        request1.setPassword("Olamide");
+        request1.setEmail("fareedtijani2810@gmail.coom");
+        request1.setPhoneNumber("08084562163");
         assertThrows(EmailOrPhoneNumberExistsException.class, ()-> userService.createNewUser(request1));
+        CreateAccountRequest request2 = createUser();
+        request2.setUsername("Fareeda");
+        request2.setPassword("Olamide");
+        request2.setEmail("fareedtijani281@gmail.com");
+        request2.setPhoneNumber("08084562163");
+        assertThrows(EmailOrPhoneNumberExistsException.class, ()-> userService.createNewUser(request2));
+
 
     }
-
     @Test
-    public void testThatUserHasAUniqueUserName(){
+    public void testThatUserHasAUniqueuserName(){
         CreateAccountRequest request = createUser();
-        CreateAccountRequest request1 = createUser2();
+        request.setUsername("Fareed");
+        request.setPassword("Olamide");
+        request.setEmail("fareedtijani2810@gmail.com");
+        request.setPhoneNumber("090998877556");
         CreateAccountResponse response = userService.createNewUser(request);
+        CreateAccountRequest request1 = createUser();
+        request1.setUsername("Fareed");
+        request1.setPassword("Olamide");
+        request1.setEmail("fareedtijani2810@gmail.coms");
+        request1.setPhoneNumber("090998877506");
         assertThrows(UsernameAlreadyExistsException.class, ()-> userService.createNewUser(request1));
+        CreateAccountRequest request2 = createUser();
+        request2.setUsername("Fareed");
+        request2.setPassword("Olamide");
+        request2.setEmail("fareedtijani2810@gmail.comms");
+        request2.setPhoneNumber("090998877500");
+        assertThrows(UsernameAlreadyExistsException.class, ()-> userService.createNewUser(request2));
     }
     @Test
     public void testThatSellerMustInputAllFieldsAreRequiredtoAddAProduct(){
@@ -88,7 +128,6 @@ class AppUserServiceImplTest {
         AddProductRequest request1 = addNewProduct(appUser.getId());
         assertThrows(FieldsRequiredExecption.class, ()-> sellerService.addProduct(request1));
     }
-
     @Test
     public void testThatUserCanGetTheirProfile(){
         CreateAccountRequest request = createUser2();
@@ -101,35 +140,35 @@ class AppUserServiceImplTest {
         assertThat(response1.getUserName()).isNotNull();
 
     }
-
     @Test
-    public void testThatOnlySellerCanAddProduct(){
-        CreateAccountRequest request = createUser2();
+    public void testThatAllFieldsMustBeAddedBeforeSellerCanAddProduct(){
+        CreateAccountRequest request = createUser();
+        request.setUsername("Fareed");
+        request.setPassword("Olamide");
+        request.setEmail("fareedtijani2810@gmail.com");
+        request.setPhoneNumber("090998877556");
         CreateAccountResponse response = userService.createNewUser(request);
         String userName = request.getUsername();
-
         System.out.println(userName);
         AppUser appUser = userRepository.findByUsername(userName);
         AddProductRequest request1 = addNewProduct(appUser.getId());
-        assertThrows(NotASellerException.class, ()-> sellerService.addProduct(request1));
+        assertThrows(FieldsRequiredExecption.class, ()-> sellerService.addProduct(request1));
+    }
+    @Test
+    public void testThatUserCanApplyToBeASeller() throws IOException {
+        CreateAccountRequest request = createUser();
+        CreateAccountResponse response = userService.createNewUser(request);
+        AppUser user = userRepository.findByUsername(request.getUsername());
+        SellerApplicationRequest request1 = new SellerApplicationRequest();
+        request1.setBusinessName("Freddie Cosmetics");
+        request1.setProductType("BEAUTY");
+        request1.setUserId(user.getId());
+        request1.setProductDescription("cream cheap");
+        SellerApplicationResponse response1 = userService.applyToBeASellerWith(request1);
+        assertThat(response1).isNotNull();
     }
 
-//    @Test
-//    public void testThatUserCanApplyToBeASeller() throws IOException {
-//        CreateAccountRequest request = createUser();
-//        CreateAccountResponse response = userService.createNewUser(request);
-//        SellerApplicationRequest request1 = applicationRequest();
-//        SellerApplicationResponse response1 = userService.applyToBeASellerWith(request1);
-//        assertThat(response1).isNotNull();
-//    }
 
-
-    public SellerApplicationRequest applicationRequest(){
-        SellerApplicationRequest request = new  SellerApplicationRequest();
-        request.setNin("27738383737373633663");
-        request.setBvn("777282928900990999999");
-        return request;
-    }
 
     private AddProductRequest addNewProduct(Long id) {
         ArrayList <String> images = new ArrayList<>();
@@ -150,10 +189,8 @@ class AppUserServiceImplTest {
         request.setUsername("fareed");
         request.setEmail("fareedtijani2810@gmail.com");
         request.setPassword("olamide");
-        request.setAddress("Badagry");
         request.setPhoneNumber("090223946768");
 //        request.setProfilePicture("u");
-        request.setBio("i am good trader");
         return request;
     }
 
@@ -163,10 +200,7 @@ class AppUserServiceImplTest {
         request.setUsername("ebuka");
         request.setEmail("freddie28100@gmail.com");
         request.setPassword("solar");
-        request.setAddress("Badagry");
         request.setPhoneNumber("090227739467688");
-        request.setProfilePicture("urlwt37373gffff.png");
-        request.setBio("i am good trader");
         return request;
     }
 

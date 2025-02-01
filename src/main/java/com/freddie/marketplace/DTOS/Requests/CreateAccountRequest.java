@@ -11,10 +11,7 @@ public class CreateAccountRequest {
     private String username;
     private String email;
     private String password;
-    private String address;
     private String phoneNumber;
-    private String profilePicture;
-    private String bio;
 
 
 }

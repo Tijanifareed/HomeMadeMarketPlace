@@ -2,6 +2,7 @@ package com.freddie.marketplace.data.model;
 
 
 import com.freddie.marketplace.data.model.modelEnums.ApplicationStatus;
+import com.freddie.marketplace.data.model.modelEnums.CategoryType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,9 +22,9 @@ public class Seller  {
     private Long id;
     private Long userId;
     private String idCardUrl;
-    private String nin;
-    private String bvn;
-    private String portfolio;
+    private String businessName;
+    private String productDescription;
+    private CategoryType productType;
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 }
